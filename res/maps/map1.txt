@@ -139,14 +139,8 @@
 				{
 					"id_enemy":0,
 					"position":{
-						"x":6,
-						"y":4
-					}
-				},{
-					"id_enemy":0,
-					"position":{
-						"x":8,
-						"y":6
+						"x":1,
+						"y":1
 					}
 				}
 			]

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import mmorpg.camera.Camera;
 import mmorpg.common.Placeable;
+import mmorpg.enemies.Enemy;
 import mmorpg.enemies.WallEnemy;
 import mmorpg.map.Map;
 import mmorpg.map.room.buildingstrategies.RoomBuildingStrategy;
@@ -118,20 +119,6 @@ public class Room {
         this.move(moveFactor, null);
     }
 
-    public void moveToPosition(Vector2f newPosition) {
-        for (int i = 0; i < room.length; i++) {
-            for (int j = 0; j < room[0].length; j++) {
-                room[i][j].setPosition(new Vector2f(tileWidth * j + newPosition.x, tileHeight * i + newPosition.y));
-            }
-        }
-        for (Placeable object : objects) {
-            //move objects to their init position
-            //object.setPosition(new Vector2f(object.getPosition().x + newPosition.x, object.getPosition().y+ newPosition.y));
-            //placeObject(object, (int) initPositions.get(object).x , (int) initPositions.get(object).y);
-            object.setPosition(new Vector2f(initPositions.get(object).x, initPositions.get(object).x));
-        }
-    }
-
     public Tile getTileByPositionInRoom(int tileX, int tileY) {
         return room[tileY][tileX];
     }
@@ -145,7 +132,7 @@ public class Room {
         newPosition.y = tileHeight * tileY + tileHeight / 2 - placeable.getHeight() / 2;
         placeable.setPosition(newPosition);
         //also remember the position
-        setInitPosition(placeable, newPosition);
+        //setInitPosition(placeable, newPosition);
         return true;
     }
 
@@ -334,12 +321,12 @@ public class Room {
     public boolean hitTheDoor(Placeable placeable) {
         if (isFullInsideTile(placeable) && getFullCurrentTile(placeable).getType() == Tile.DOOR_TILE) {
             map.nextRoom(this, (DoorTile) getCurrentTile(placeable), placeable);
-            for (int i = 0; i < objects.size(); i++) {
-                if (objects.get(i) != placeable) {
-                    setInitPosition(placeable, new Vector2f(objects.get(i).getPosition().x, objects.get(i).getPosition().y));
-                }
-            }
-            this.moveToPosition(new Vector2f(0, 0));
+            //this.moveToPosition(new Vector2f(0, 0));
+            Vector2f initPosition = room[0][0].getPosition();
+            Vector2f finalPosition = new Vector2f();
+            finalPosition.x = 0 - initPosition.x;
+            finalPosition.y = 0 - initPosition.y;
+            move(finalPosition);
             return true;
         }
         return false;

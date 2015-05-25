@@ -58,7 +58,6 @@ public class Map {
     public void nextRoom(Room currentRoom, DoorTile doorTile, Placeable placeable) {
         DoorTile otherDoor = doorTile.getConnectedTo();
         Room nextRoom = otherDoor.getMyRoom();
-        //placeObject(placeable, nextRoom.getRoomId(), otherDoor.getTileX(), otherDoor.getTileY());
         currentRoom.removeObject(placeable);
         nextRoom.addObject(placeable, otherDoor.getTileX(), otherDoor.getTileY());
         nextRoom.focusObject(placeable);
