@@ -28,7 +28,7 @@
 		{
 			"id_enemy_type":0,
 			"name":"wall enemy",
-			"speed":4
+			"speed":8
 		}
 	],
 	"room_types":[

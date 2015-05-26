@@ -1,13 +1,8 @@
 package mmorpg.enemies;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mmorpg.common.Movable;
 import mmorpg.common.Placeable;
-import mmorpg.player.Player;
 import org.newdawn.slick.Animation;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 

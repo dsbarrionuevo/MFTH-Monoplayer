@@ -1,7 +1,9 @@
 package mmorpg.player;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mmorpg.common.AnimationHolder;
 import mmorpg.common.Movable;
 import mmorpg.common.Placeable;
 import mmorpg.map.room.Room;
@@ -26,14 +28,16 @@ public class Player extends Movable implements Placeable {
     private long timerHitTheDoor;
     private long timerToHitTheDoor;
     //
-    private Animation walkingFront, walkingBack, walkingLeft, walkingRight;
+    //private Animation walkingFront, walkingBack, walkingLeft, walkingRight;
+    private AnimationHolder animation;
 
     public Player() {
         super(10f, new Vector2f(), new Rectangle(0, 0, 32, 32));
         this.timerHitTheDoor = 0;
         this.timerToHitTheDoor = 1 * 1000;
         //
-        setupAnimations();
+        animation = new AnimationHolder();
+        //setupAnimations();
     }
 
     @Override
@@ -84,59 +88,101 @@ public class Player extends Movable implements Placeable {
             updateAnimation(delta);
         }
         if (input.isKeyDown(Input.KEY_LEFT)) {
-            graphic = walkingLeft;
+            graphic = animation.changeAnimation("left");
+            //graphic = walkingLeft;
         } else if (input.isKeyDown(Input.KEY_RIGHT)) {
-            graphic = walkingRight;
+            //graphic = walkingRight;
+            graphic = animation.changeAnimation("right");
         } else if (input.isKeyDown(Input.KEY_UP)) {
-            graphic = walkingBack;
+            //graphic = walkingBack;
+            graphic = animation.changeAnimation("back");
         } else if (input.isKeyDown(Input.KEY_DOWN)) {
-            graphic = walkingFront;
+            //graphic = walkingFront;
+            graphic = animation.changeAnimation("front");
         }
         if (!input.isKeyDown(Input.KEY_LEFT) && !input.isKeyDown(Input.KEY_RIGHT) && !input.isKeyDown(Input.KEY_UP) && !input.isKeyDown(Input.KEY_DOWN)) {
-            if (graphic != null) {
-                ((Animation) graphic).stop();
-                ((Animation) graphic).setCurrentFrame(0);
-            }
+            /*if (graphic != null) {
+             ((Animation) graphic).stop();
+             ((Animation) graphic).setCurrentFrame(0);
+             }*/
+            animation.still();
         }
     }
 
     private void updateAnimation(int delta) {
-        if (graphic != null) {
-            if (((Animation) graphic).isStopped()) {
-                ((Animation) graphic).start();
-            }
-            ((Animation) graphic).update(delta);
-        }
+        /*if (graphic != null) {
+         if (((Animation) graphic).isStopped()) {
+         ((Animation) graphic).start();
+         }
+         ((Animation) graphic).update(delta);
+         }*/
+        animation.updateAnimation(delta);
     }
 
     private void setupAnimations() {
+        /*
+         try {
+         //speed: 10px ==> duration: 340 milis
+         int duration = 340;
+         //animations
+         String model = "model1";
+         this.walkingFront = new Animation(new Image[]{
+         new Image("res/images/players/" + model + "/front0.png"),
+         new Image("res/images/players/" + model + "/front1.png"),
+         new Image("res/images/players/" + model + "/front2.png")
+         }, duration, true);
+         this.walkingBack = new Animation(new Image[]{
+         new Image("res/images/players/" + model + "/back0.png"),
+         new Image("res/images/players/" + model + "/back1.png"),
+         new Image("res/images/players/" + model + "/back2.png")
+         }, duration, true);
+         this.walkingLeft = new Animation(new Image[]{
+         new Image("res/images/players/" + model + "/left0.png"),
+         new Image("res/images/players/" + model + "/left1.png"),
+         new Image("res/images/players/" + model + "/left2.png")
+         }, duration, true);
+         this.walkingRight = new Animation(new Image[]{
+         new Image("res/images/players/" + model + "/right0.png"),
+         new Image("res/images/players/" + model + "/right1.png"),
+         new Image("res/images/players/" + model + "/right2.png")
+         }, duration, true);
+         setGraphic(walkingFront);
+         ((Animation) graphic).stop();
+         } catch (SlickException ex) {
+         Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
+         }*/
         try {
-            //speed: 10px ==> duration: 340 milis
+            animation = new AnimationHolder();
+            ArrayList<String> animationNames = new ArrayList<>();
+            animationNames.add("front");
+            animationNames.add("back");
+            animationNames.add("left");
+            animationNames.add("right");
+            ArrayList<Animation> animations = new ArrayList<>();
+            String model = "model3";
             int duration = 340;
-            //animations
-            String model = "model1";
-            this.walkingFront = new Animation(new Image[]{
+            animations.add(new Animation(new Image[]{
                 new Image("res/images/players/" + model + "/front0.png"),
                 new Image("res/images/players/" + model + "/front1.png"),
                 new Image("res/images/players/" + model + "/front2.png")
-            }, duration, true);
-            this.walkingBack = new Animation(new Image[]{
+            }, duration, true));
+            animations.add(new Animation(new Image[]{
                 new Image("res/images/players/" + model + "/back0.png"),
                 new Image("res/images/players/" + model + "/back1.png"),
                 new Image("res/images/players/" + model + "/back2.png")
-            }, duration, true);
-            this.walkingLeft = new Animation(new Image[]{
+            }, duration, true));
+            animations.add(new Animation(new Image[]{
                 new Image("res/images/players/" + model + "/left0.png"),
                 new Image("res/images/players/" + model + "/left1.png"),
                 new Image("res/images/players/" + model + "/left2.png")
-            }, duration, true);
-            this.walkingRight = new Animation(new Image[]{
+            }, duration, true));
+            animations.add(new Animation(new Image[]{
                 new Image("res/images/players/" + model + "/right0.png"),
                 new Image("res/images/players/" + model + "/right1.png"),
                 new Image("res/images/players/" + model + "/right2.png")
-            }, duration, true);
-            setGraphic(walkingFront);
-            ((Animation) graphic).stop();
+            }, duration, true));
+            animation.setup(animationNames, animations, new int[]{0, 0, 0, 0});
+            graphic = animation.changeAnimation("front");
         } catch (SlickException ex) {
             Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
         }
