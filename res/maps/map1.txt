@@ -66,7 +66,7 @@
 						{
 							"side":"front",
 							"animation":{
-								"path":"res/images/monsters/monster4",
+								"path":"res/images/monsters/monster0",
 								"sprites":["front_0.png","front_1.png","front_2.png"],
 								"still":"front_1.png"
 							}
@@ -74,7 +74,7 @@
 						{
 							"side":"left",
 							"animation":{
-								"path":"res/images/monsters/monster4",
+								"path":"res/images/monsters/monster0",
 								"sprites":["left_0.png","left_1.png","left_2.png"],
 								"still":"left_1.png"
 							}
@@ -82,7 +82,7 @@
 						{
 							"side":"right",
 							"animation":{
-								"path":"res/images/monsters/monster4",
+								"path":"res/images/monsters/monster0",
 								"sprites":["right_0.png","right_1.png","right_2.png"],
 								"still":"right_1.png"
 							}
@@ -90,7 +90,7 @@
 						{
 							"side":"back",
 							"animation":{
-								"path":"res/images/monsters/monster4",
+								"path":"res/images/monsters/monster0",
 								"sprites":["back_0.png","back_1.png","back_2.png"],
 								"still":"back_1.png"
 							}
@@ -117,6 +117,47 @@
 					"tile_type":2,
 					"image":"castle_door.png"
 				}
+			],
+			"enemies":[
+				{
+					"id_enemy":0,
+					"name":"red dragon",
+					"enemy_type":0,
+					"animations":[
+						{
+							"side":"front",
+							"animation":{
+								"path":"res/images/monsters/monster3",
+								"sprites":["front_0.png","front_1.png","front_2.png"],
+								"still":"front_1.png"
+							}
+						},
+						{
+							"side":"left",
+							"animation":{
+								"path":"res/images/monsters/monster3",
+								"sprites":["left_0.png","left_1.png","left_2.png"],
+								"still":"left_1.png"
+							}
+						},
+						{
+							"side":"right",
+							"animation":{
+								"path":"res/images/monsters/monster3",
+								"sprites":["right_0.png","right_1.png","right_2.png"],
+								"still":"right_1.png"
+							}
+						},
+						{
+							"side":"back",
+							"animation":{
+								"path":"res/images/monsters/monster3",
+								"sprites":["back_0.png","back_1.png","back_2.png"],
+								"still":"back_1.png"
+							}
+						}
+					]
+				}
 			]
 		}
 	],
@@ -142,7 +183,13 @@
 						"x":1,
 						"y":1
 					}
-				}
+				},{
+					"id_enemy":0,
+					"position":{
+						"x":5,
+						"y":3
+					}
+				},
 			]
 		},
 		{
@@ -165,6 +212,27 @@
 				[1,0,0,0,0,0,0,0,0,0,0,1,1,1],
 				[1,0,0,1,1,1,0,0,0,0,1,1,1,1],
 				[1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+			],
+			"enemies":[
+				{
+					"id_enemy":0,
+					"position":{
+						"x":1,
+						"y":1
+					}
+				},{
+					"id_enemy":0,
+					"position":{
+						"x":2,
+						"y":11
+					}
+				},{
+					"id_enemy":0,
+					"position":{
+						"x":6,
+						"y":13
+					}
+				},
 			]
 		},
 		{
@@ -178,6 +246,15 @@
 				[1,0,0,1,0,1,0,0,1],
 				[1,1,0,1,0,0,0,1,1],
 				[1,1,1,1,1,1,1,1,1]
+			],
+			"enemies":[
+				{
+					"id_enemy":0,
+					"position":{
+						"x":6,
+						"y":3
+					}
+				}
 			]
 		}
 	]

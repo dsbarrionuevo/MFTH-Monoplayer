@@ -114,7 +114,7 @@ public class MapReader {
                         JSONObject positionFileJson = currentEnemyFileJson.getJSONObject("position");
                         PositionFile positionFile = new PositionFile(positionFileJson.getInt("x"), positionFileJson.getInt("y"));
                         enemiesRoomFile[j] = new EnemyRoomFile(
-                                map.findRoomType(currentRoomFileJson.getInt("id_room")).findEnemyFile(currentEnemyFileJson.getInt("id_enemy")),
+                                map.findRoomType(currentRoomFileJson.getInt("room_type")).findEnemyFile(currentEnemyFileJson.getInt("id_enemy")),
                                 positionFile
                         );
                     }
