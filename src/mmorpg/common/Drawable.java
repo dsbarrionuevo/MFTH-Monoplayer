@@ -25,7 +25,7 @@ public abstract class Drawable {
         this.body = body;
         this.width = body.getWidth();
         this.height = body.getHeight();
-        this.graphic = null;
+        this.graphic = null;//must set a defaut renderable as resource
     }
 
     public Drawable(Vector2f position, Shape body) {

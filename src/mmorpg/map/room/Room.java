@@ -143,6 +143,7 @@ public class Room {
     private Tile getTileInCorner(Placeable placeable, int corner) {
         Tile foundTile = null;
         Vector2f mainPosition = room[0][0].getPosition();
+        //absolute in the room, but is actually relative to the first tile in the upper left corner
         Vector2f absolutePosition = new Vector2f(
                 placeable.getPosition().x - mainPosition.x,
                 placeable.getPosition().y - mainPosition.y
@@ -276,6 +277,7 @@ public class Room {
                 limit = definedLimitWidth;
                 if (position.x < limit) {
                     movement.x = distanceMoving;
+                    //pleaceble reached the end of the camera padding (screen) so we stop moving the placeable, and instead we move all the room
                     move(movement, placeable);
                     allowMoving = false;
                 }
@@ -334,12 +336,13 @@ public class Room {
 
     public Tile getFullCurrentTile(Placeable placeable) {
         Tile[] tiles = new Tile[]{
-            getTileInCorner(placeable, 0),
-            getTileInCorner(placeable, 1),
-            getTileInCorner(placeable, 2),
-            getTileInCorner(placeable, 3)
+            getTileInCorner(placeable, CORNER_TOP_LEFT),
+            getTileInCorner(placeable, CORNER_TOP_RIGHT),
+            getTileInCorner(placeable, CORNER_BOTTOM_LEFT),
+            getTileInCorner(placeable, CORNER_BOTTOM_RIGHT)
         };
         for (int i = 1; i < tiles.length; i++) {
+            //only when all tiles matched with the four corners of the placeable we are sure the placeable is full inside it
             if (tiles[i] != tiles[i - 1]) {
                 return null;
             }

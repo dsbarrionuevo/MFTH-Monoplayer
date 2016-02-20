@@ -5,6 +5,7 @@ import mmorpg.player.Player;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mmorpg.camera.Camera;
+import mmorpg.camera.StatsLayer;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -20,6 +21,7 @@ public class MMORPG extends BasicGame {
 
     private Map map;
     private Player player;
+    private StatsLayer statsLayer;
 
     public MMORPG() throws SlickException {
         super("MMORPG");
@@ -37,6 +39,8 @@ public class MMORPG extends BasicGame {
         player = new Player();
         map.getCurrentRoom().addObject(player, 6, 6);
         map.getCurrentRoom().focusObject(player);
+        //
+        statsLayer = new StatsLayer();
     }
 
     @Override
@@ -47,6 +51,7 @@ public class MMORPG extends BasicGame {
     @Override
     public void render(GameContainer container, Graphics g) throws SlickException {
         map.render(container, g);
+        statsLayer.render(container, g);
     }
 
     public static void main(String[] args) {

@@ -24,6 +24,8 @@ import org.newdawn.slick.geom.Vector2f;
 public class Player extends Movable implements Placeable {
 
     private Room room;
+    private float life;
+    private float attackForce;
     //
     private long timerHitTheDoor;
     private long timerToHitTheDoor;
@@ -35,9 +37,11 @@ public class Player extends Movable implements Placeable {
         super(10f, new Vector2f(), new Rectangle(0, 0, 32, 32));
         this.timerHitTheDoor = 0;
         this.timerToHitTheDoor = 1 * 1000;
+        this.life = 100;
+        this.attackForce = 10;
         //
         animation = new AnimationHolder();
-        //setupAnimations();
+        setupAnimations();
     }
 
     @Override
@@ -215,6 +219,22 @@ public class Player extends Movable implements Placeable {
     @Override
     public Room getRoom() {
         return this.room;
+    }
+
+    public float getLife() {
+        return life;
+    }
+
+    public void setLife(float life) {
+        this.life = life;
+    }
+
+    public float getAttackForce() {
+        return attackForce;
+    }
+
+    public void setAttackForce(float attackForce) {
+        this.attackForce = attackForce;
     }
 
 }
