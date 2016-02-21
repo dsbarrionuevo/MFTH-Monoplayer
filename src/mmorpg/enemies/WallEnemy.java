@@ -34,13 +34,15 @@ public class WallEnemy extends Enemy {
 
     @Override
     public void render(GameContainer gc, Graphics g) {
-        g.setColor(Color.red);
-        this.body.setX(position.x);
-        this.body.setY(position.y);
-        if (graphic != null) {
-            ((Animation) graphic).draw(body.getX(), body.getY());
-        } else {
-            g.fill(body);
+        if (this.isVisible()) {
+            g.setColor(Color.red);
+            this.body.setX(position.x);
+            this.body.setY(position.y);
+            if (graphic != null) {
+                ((Animation) graphic).draw(body.getX(), body.getY());
+            } else {
+                g.fill(body);
+            }
         }
     }
 

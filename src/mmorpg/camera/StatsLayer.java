@@ -12,26 +12,57 @@ import org.newdawn.slick.geom.Vector2f;
  * @author Barrionuevo Diego
  */
 public class StatsLayer {
-    
-    private Drawable lifeBar;
-    
+
+    private LifeBar lifeBar;
+
     public StatsLayer() {
-        lifeBar = new Drawable(new Vector2f(10, 10), new Rectangle(0, 0, 200, 10)) {
-            
-            @Override
-            public void render(GameContainer gc, Graphics g) {
-                this.body.setX(position.x);
-                this.body.setY(position.y);
-                g.setColor(Color.green);
-                g.fill(body);
-                g.setColor(Color.black);
-                g.draw(body);
-            }
-        };
+        lifeBar = new LifeBar();
     }
-    
+
     public void render(GameContainer gc, Graphics g) {
-        this.lifeBar.render(gc, g);
+        lifeBar.render(gc, g);
     }
     
+    public void decreaseLifeBar(float lifePoints) {
+        lifeBar.decreaseLifeBar(lifePoints);
+    }
+
+    class LifeBar {
+
+        private Drawable lifeBar;
+        private float currentWidth, maxWidth;
+
+        public LifeBar() {
+            maxWidth = 200;
+            currentWidth = maxWidth;
+            lifeBar = new Drawable(new Vector2f(10, 10), new Rectangle(0, 0, maxWidth, 10)) {
+
+                @Override
+                public void render(GameContainer gc, Graphics g) {
+                    this.body.setX(position.x);
+                    this.body.setY(position.y);
+                    ((Rectangle) this.body).setWidth(currentWidth);
+                    g.setColor(Color.green);
+                    g.fill(body);
+                    g.setColor(Color.black);
+                    ((Rectangle) this.body).setWidth(maxWidth);
+                    g.draw(body);
+                }
+            };
+        }
+
+        public void decreaseLifeBar(float lifePoints) {
+            float decrease = (lifePoints * maxWidth) / 100;
+            if (currentWidth - decrease < 0) {
+                currentWidth = 0;
+            } else {
+                currentWidth -= decrease;
+            }
+        }
+
+        public void render(GameContainer gc, Graphics g) {
+            lifeBar.render(gc, g);
+        }
+    }
+
 }

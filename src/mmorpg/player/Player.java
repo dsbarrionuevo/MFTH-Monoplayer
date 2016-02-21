@@ -16,6 +16,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.util.InputAdapter;
 
 /**
  *
@@ -42,11 +43,14 @@ public class Player extends Movable implements Placeable {
         //
         animation = new AnimationHolder();
         setupAnimations();
+        
+         
     }
 
     @Override
     public void update(GameContainer container, int delta) {
         move(container, delta);
+        checkIfAttack(container, delta);
         //check if stand on door
         checkHitDoor(delta);
     }
@@ -60,6 +64,13 @@ public class Player extends Movable implements Placeable {
             ((Animation) graphic).draw(body.getX(), body.getY());
         } else {
             g.fill(body);
+        }
+    }
+
+    private void checkIfAttack(GameContainer container, int delta) {
+        Input input = container.getInput();
+        if (input.isKeyDown(Input.KEY_SPACE)){
+            System.out.println("space!"  + delta);
         }
     }
 

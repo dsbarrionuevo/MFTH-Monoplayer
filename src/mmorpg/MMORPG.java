@@ -1,11 +1,14 @@
 package mmorpg;
 
+import java.util.ArrayList;
 import mmorpg.map.Map;
 import mmorpg.player.Player;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mmorpg.camera.Camera;
 import mmorpg.camera.StatsLayer;
+import mmorpg.enemies.Enemy;
+import mmorpg.map.room.Room;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -22,6 +25,7 @@ public class MMORPG extends BasicGame {
     private Map map;
     private Player player;
     private StatsLayer statsLayer;
+    private Room currentRoom;
 
     public MMORPG() throws SlickException {
         super("MMORPG");
@@ -37,15 +41,30 @@ public class MMORPG extends BasicGame {
         Camera.getInstance().setPadding(4);
         map = new Map(1);
         player = new Player();
-        map.getCurrentRoom().addObject(player, 6, 6);
-        map.getCurrentRoom().focusObject(player);
+        currentRoom = map.getCurrentRoom();
+        currentRoom.addObject(player, 1, 1);
+        currentRoom.focusObject(player);
         //
         statsLayer = new StatsLayer();
     }
 
     @Override
     public void update(GameContainer container, int delta) throws SlickException {
-        map.getCurrentRoom().update(container, delta);
+        currentRoom = map.getCurrentRoom();
+        currentRoom.update(container, delta);
+        //todo el control se hace aquí
+        ArrayList<Enemy> enemies = currentRoom.getEnemies();
+        for (int i = 0; i < enemies.size(); i++) {
+            if (enemies.get(i).collide(player)) {
+                player.setLife(player.getLife() - 10);
+                statsLayer.decreaseLifeBar(10);
+                if (player.getLife() <= 0) {
+                    System.out.println("GAMEOVER");
+                }
+                //kill enemy
+                currentRoom.removeObject(enemies.get(i));
+            }
+        }
     }
 
     @Override
