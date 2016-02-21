@@ -14,12 +14,14 @@ public class AnimationHolder {
     private static final int INVALID_STILL_FRAME = -1;
     private Map<String, Animation> animationMap;
     private Animation currentAnimation;
+    private String currentAnimationName;
     private int[] stillFrames;
 
     public AnimationHolder() {
         this.animationMap = new HashMap<String, Animation>();
         this.stillFrames = null;
         this.currentAnimation = null;
+        this.currentAnimationName = null;
     }
 
     public void updateAnimation(int delta) {
@@ -98,6 +100,7 @@ public class AnimationHolder {
 
     public Animation changeAnimation(String name) {
         this.currentAnimation = animationMap.get(name);
+        this.currentAnimationName = name;
         return this.currentAnimation;
     }
 
@@ -111,6 +114,10 @@ public class AnimationHolder {
 
     public Animation getCurrentAnimation() {
         return currentAnimation;
+    }
+    
+    public String  getCurrentAnimationName() {
+        return this.currentAnimationName;
     }
 
     public void setCurrentAnimation(Animation currentAnimation) {

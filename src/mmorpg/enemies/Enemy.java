@@ -13,9 +13,11 @@ import org.newdawn.slick.geom.Vector2f;
 public abstract class Enemy extends Movable implements Placeable {
 
     protected Animation walkingFront, walkingBack, walkingLeft, walkingRight;
+    protected float attackForce;
 
     public Enemy(float speed, Vector2f position, Shape body) {
         super(speed, position, body);
+        this.attackForce = 5; //default
     }
 
     @Override
@@ -37,7 +39,11 @@ public abstract class Enemy extends Movable implements Placeable {
     public float getHeight() {
         return this.height;
     }
-    
+
+    public float getAttackForce() {
+        return attackForce;
+    }
+
     protected void updateAnimation(int delta) {
         if (graphic != null) {
             if (((Animation) graphic).isStopped()) {

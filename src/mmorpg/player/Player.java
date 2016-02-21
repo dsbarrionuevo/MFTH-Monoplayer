@@ -24,10 +24,17 @@ import org.newdawn.slick.util.InputAdapter;
  */
 public class Player extends Movable implements Placeable {
 
+    public static final int STATE_WALKING = 0;
+    public static final int STATE_STILL = 1;
+    public static final int STATE_ATTACKING = 2;
     private Room room;
     private float life;
     private float attackForce;
+    private int state;
     //
+    private boolean isInjure;
+    private long timerHealInjure;
+    private long timerToHealInjure;
     private long timerHitTheDoor;
     private long timerToHitTheDoor;
     //
@@ -36,15 +43,17 @@ public class Player extends Movable implements Placeable {
 
     public Player() {
         super(10f, new Vector2f(), new Rectangle(0, 0, 32, 32));
+        this.state = STATE_STILL;
         this.timerHitTheDoor = 0;
         this.timerToHitTheDoor = 1 * 1000;
+        this.timerHealInjure = 0;
+        this.timerToHealInjure = 2 * 1000;
         this.life = 100;
         this.attackForce = 10;
         //
+        this.isInjure = false;
         animation = new AnimationHolder();
         setupAnimations();
-        
-         
     }
 
     @Override
@@ -53,6 +62,7 @@ public class Player extends Movable implements Placeable {
         checkIfAttack(container, delta);
         //check if stand on door
         checkHitDoor(delta);
+        checkHealInjure(delta);
     }
 
     @Override
@@ -65,12 +75,45 @@ public class Player extends Movable implements Placeable {
         } else {
             g.fill(body);
         }
+        if (this.state == STATE_ATTACKING) {
+            g.setColor(Color.blue);
+            float swordWidth = 18;
+            float swordHeight = 2;
+            //horizontal por defecto
+            Rectangle sword = new Rectangle(position.x + width / 2, position.y + height / 2, swordWidth, swordHeight);
+            float awayFromPlayer = 10;
+            if (animation.getCurrentAnimationName() == "left") {
+                sword.setX(sword.getX() - swordWidth - awayFromPlayer);
+                sword.setY(sword.getY() - swordHeight / 2);
+            } else if (animation.getCurrentAnimationName() == "right") {
+                sword.setX(sword.getX() + awayFromPlayer);
+                sword.setY(sword.getY() - swordHeight / 2);
+            } else if (animation.getCurrentAnimationName() == "back") {
+                sword.setY(sword.getY() - swordWidth - awayFromPlayer);
+                sword.setX(sword.getX() - swordHeight / 2);
+                sword.setHeight(swordWidth);
+                sword.setWidth(swordHeight);
+            } else if (animation.getCurrentAnimationName() == "front") {
+                sword.setY(sword.getY() + awayFromPlayer);
+                sword.setX(sword.getX() - swordHeight / 2);
+                sword.setHeight(swordWidth);
+                sword.setWidth(swordHeight);
+            }
+            g.fill(sword);
+        }
+        if (this.isInjure) {
+            g.setColor(Color.red);
+            g.fillRect(position.x + width / 2 - 10, position.y + height / 2 - 10, 20, 20);
+        }
     }
 
     private void checkIfAttack(GameContainer container, int delta) {
         Input input = container.getInput();
-        if (input.isKeyDown(Input.KEY_SPACE)){
-            System.out.println("space!"  + delta);
+        if (input.isKeyDown(Input.KEY_SPACE)) {
+            //animacion de ataque
+            this.state = STATE_ATTACKING;
+        } else {
+            this.state = STATE_STILL;
         }
     }
 
@@ -83,24 +126,40 @@ public class Player extends Movable implements Placeable {
         this.timerHitTheDoor += delta;
     }
 
+    private void checkHealInjure(int delta) {
+        if (this.isInjure == true) {
+            this.timerHealInjure += delta;
+            if (this.timerHealInjure > this.timerToHealInjure) {
+                this.timerHealInjure = 0;
+                this.isInjure = false;
+            }
+        }
+    }
+
     private void move(GameContainer container, int delta) {
         Input input = container.getInput();
+        //if (state != STATE_ATTACKING) {
         float moveFactor = speed * (delta / 100f);
+        //this.state = STATE_STILL;
         if (input.isKeyDown(Input.KEY_LEFT) && room.canMoveTo(this, Room.DIRECTION_WEST) && room.movingInsideCamera(this, moveFactor, Room.DIRECTION_WEST)) {
             position.x -= moveFactor;
             updateAnimation(delta);
+            this.state = STATE_WALKING;
         }
         if (input.isKeyDown(Input.KEY_RIGHT) && room.canMoveTo(this, Room.DIRECTION_EAST) && room.movingInsideCamera(this, moveFactor, Room.DIRECTION_EAST)) {
             position.x += moveFactor;
             updateAnimation(delta);
+            this.state = STATE_WALKING;
         }
         if (input.isKeyDown(Input.KEY_UP) && room.canMoveTo(this, Room.DIRECTION_NORTH) && room.movingInsideCamera(this, moveFactor, Room.DIRECTION_NORTH)) {
             position.y -= moveFactor;
             updateAnimation(delta);
+            this.state = STATE_WALKING;
         }
         if (input.isKeyDown(Input.KEY_DOWN) && room.canMoveTo(this, Room.DIRECTION_SOUTH) && room.movingInsideCamera(this, moveFactor, Room.DIRECTION_SOUTH)) {
             position.y += moveFactor;
             updateAnimation(delta);
+            this.state = STATE_WALKING;
         }
         if (input.isKeyDown(Input.KEY_LEFT)) {
             graphic = animation.changeAnimation("left");
@@ -122,6 +181,7 @@ public class Player extends Movable implements Placeable {
              }*/
             animation.still();
         }
+        //}
     }
 
     private void updateAnimation(int delta) {
@@ -248,4 +308,17 @@ public class Player extends Movable implements Placeable {
         this.attackForce = attackForce;
     }
 
+    public boolean isAttacking() {
+        return this.state == STATE_ATTACKING;
+    }
+
+    public void injure() {
+        if (this.isInjure == false && this.timerHealInjure == 0) {
+            this.isInjure = true;
+        }
+    }
+
+    public boolean isInjure() {
+        return this.isInjure;
+    }
 }

@@ -55,14 +55,22 @@ public class MMORPG extends BasicGame {
         //todo el control se hace aquí
         ArrayList<Enemy> enemies = currentRoom.getEnemies();
         for (int i = 0; i < enemies.size(); i++) {
-            if (enemies.get(i).collide(player)) {
-                player.setLife(player.getLife() - 10);
-                statsLayer.decreaseLifeBar(10);
-                if (player.getLife() <= 0) {
-                    System.out.println("GAMEOVER");
+            Enemy enemy = enemies.get(i);
+            if (enemy.collide(player)) {
+                if (player.isAttacking()) {
+                    //kill enemy
+                    currentRoom.removeObject(enemy);
+                } else {
+                    if (!player.isInjure()) {
+                        player.injure();
+                        float enemyAttackForce = enemy.getAttackForce();
+                        player.setLife(player.getLife() - enemyAttackForce);
+                        statsLayer.decreaseLifeBar(enemyAttackForce);
+                        if (player.getLife() <= 0) {
+                            System.out.println("GAMEOVER");
+                        }
+                    }
                 }
-                //kill enemy
-                currentRoom.removeObject(enemies.get(i));
             }
         }
     }
@@ -76,8 +84,10 @@ public class MMORPG extends BasicGame {
     public static void main(String[] args) {
         try {
             new MMORPG();
+
         } catch (SlickException ex) {
-            Logger.getLogger(MMORPG.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MMORPG.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
     }
