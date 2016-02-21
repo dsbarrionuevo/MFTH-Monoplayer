@@ -56,6 +56,8 @@ public class MMORPG extends BasicGame {
         ArrayList<Enemy> enemies = currentRoom.getEnemies();
         for (int i = 0; i < enemies.size(); i++) {
             Enemy enemy = enemies.get(i);
+            //esto lo deberia hacer cada enemigo en su update, pero el enemigo no sabe cual es su target y este puede cambiar... (puede ser null cuando el jugador deja la sala)
+            enemy.updateFollowingStrategy(player, delta);
             if (enemy.collide(player)) {
                 if (player.isAttacking()) {
                     //kill enemy

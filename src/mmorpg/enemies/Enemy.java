@@ -12,12 +12,18 @@ import org.newdawn.slick.geom.Vector2f;
  */
 public abstract class Enemy extends Movable implements Placeable {
 
+    public static final int STATE_STILL = 0;
+    public static final int STATE_PATROL = 1;
+    public static final int STATE_FOLLOWING = 2;
     protected Animation walkingFront, walkingBack, walkingLeft, walkingRight;
     protected float attackForce;
+    protected FollowingStrategy followingStrategy;
+    protected int state;
 
     public Enemy(float speed, Vector2f position, Shape body) {
         super(speed, position, body);
         this.attackForce = 5; //default
+        this.followingStrategy = new DefaultFollowingStrategy();
     }
 
     @Override
@@ -42,6 +48,10 @@ public abstract class Enemy extends Movable implements Placeable {
 
     public float getAttackForce() {
         return attackForce;
+    }
+
+    public void updateFollowingStrategy(Placeable placeable, int delta) {
+        this.followingStrategy.update(this, placeable, delta);
     }
 
     protected void updateAnimation(int delta) {

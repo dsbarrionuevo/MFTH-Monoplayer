@@ -43,6 +43,7 @@ public class WallEnemy extends Enemy {
             } else {
                 g.fill(body);
             }
+            this.followingStrategy.render(this, gc, g);
         }
     }
 
