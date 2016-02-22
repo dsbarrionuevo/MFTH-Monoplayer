@@ -20,10 +20,10 @@ public abstract class Enemy extends Movable implements Placeable {
     public static final int STATE_FOLLOWING = 2;
     //it is in px, but could be in tiles...
     protected float radiusVision, radiusLostContact;
-    //protected Animation walkingFront, walkingBack, walkingLeft, walkingRight;
     protected AnimationHolder animation;
     protected Room room;
     protected float attackForce;
+    protected float life;
     protected FollowingStrategy followingStrategy;
     protected MovingStrategy movingStrategy;
     protected int preferredInitState;
@@ -31,13 +31,14 @@ public abstract class Enemy extends Movable implements Placeable {
 
     public Enemy(float speed, Vector2f position, Shape body) {
         super(speed, position, body);
+        this.life = 1000; //default
         this.attackForce = 5; //default
         this.preferredInitState = STATE_PATROL;
         this.state = preferredInitState;
         this.animation = new AnimationHolder();
         setupFollowingStrategy();
         setupMovingStrategy();
-        setupFollowingParameters(40, 200);
+        setupFollowingParameters(120, 200);
     }
 
     @Override
@@ -159,6 +160,37 @@ public abstract class Enemy extends Movable implements Placeable {
                 graphic = animation.changeAnimation("front");
                 break;
         }
+    }
+
+    public void injure(float damage) {
+        this.life -= damage;
+    }
+
+    public void injure(float damage, Vector2f attackerPosition) {
+        //this method push away the object by his attacker, the distance could vary on the attack force
+        double angle = Math.atan2(attackerPosition.y - position.y, attackerPosition.x - position.x);
+        double degrees = angle * (180 / Math.PI) + 180;
+        int direction = -1;
+        if (degrees >= 45 && degrees < 135) {
+            direction = Room.DIRECTION_SOUTH;
+        } else if (degrees >= 135 && degrees < 225) {
+            direction = Room.DIRECTION_WEST;
+        } else if (degrees >= 225 && degrees < 315) {
+            direction = Room.DIRECTION_NORTH;
+        } else if ((degrees >= 315 && degrees <= 360) || (degrees >= 0 && degrees < 45)) {
+            direction = Room.DIRECTION_EAST;
+        }
+        System.out.println(degrees);
+        float distance = 0.4f;//px
+        if (room.canMoveTo(this, direction)) {
+            position.x += Math.cos(angle) * distance * (-1);
+            position.y += Math.sin(angle) * distance * (-1);
+        }
+        //this.injure(damage);
+    }
+
+    public boolean isDead() {
+        return this.life <= 0;
     }
 
 }

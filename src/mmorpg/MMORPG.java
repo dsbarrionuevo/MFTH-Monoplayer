@@ -62,8 +62,10 @@ public class MMORPG extends BasicGame {
             Enemy enemy = enemies.get(i);
             if (enemy.collide(player)) {
                 if (player.isAttacking()) {
-                    //kill enemy
-                    currentRoom.removeObject(enemy);
+                    enemy.injure(player.getAttackForce(), player.getPosition());
+                    if (enemy.isDead()) {
+                        currentRoom.removeObject(enemy);
+                    }
                 } else {
                     if (!player.isInjure()) {
                         player.injure();

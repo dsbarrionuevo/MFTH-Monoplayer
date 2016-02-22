@@ -185,22 +185,8 @@
 				{
 					"id_enemy":0,
 					"position":{
-						"x":8,
-						"y":4
-					}
-				},
-				{
-					"id_enemy":0,
-					"position":{
-						"x":9,
-						"y":8
-					}
-				},
-				{
-					"id_enemy":0,
-					"position":{
-						"x":4,
-						"y":9
+						"x":3,
+						"y":2
 					}
 				}
 			]
