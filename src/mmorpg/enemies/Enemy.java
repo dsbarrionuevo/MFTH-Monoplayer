@@ -172,21 +172,40 @@ public abstract class Enemy extends Movable implements Placeable {
         double degrees = angle * (180 / Math.PI) + 180;
         int direction = -1;
         if (degrees >= 45 && degrees < 135) {
+            System.out.println("DIRECTION_SOUTH");
             direction = Room.DIRECTION_SOUTH;
         } else if (degrees >= 135 && degrees < 225) {
+            System.out.println("DIRECTION_WEST");
             direction = Room.DIRECTION_WEST;
         } else if (degrees >= 225 && degrees < 315) {
+            System.out.println("DIRECTION_NORTH");
             direction = Room.DIRECTION_NORTH;
         } else if ((degrees >= 315 && degrees <= 360) || (degrees >= 0 && degrees < 45)) {
+            System.out.println("DIRECTION_EAST");
             direction = Room.DIRECTION_EAST;
         }
         System.out.println(degrees);
-        float distance = 0.4f;//px
+        float distance = 0.2f;//px
         if (room.canMoveTo(this, direction)) {
-            position.x += Math.cos(angle) * distance * (-1);
-            position.y += Math.sin(angle) * distance * (-1);
+            //position.x += Math.cos(angle) * distance * (-1);
+            //position.y += Math.sin(angle) * distance * (-1);
+            //en lugar de correrlo un angulo, voy a correrlo una direccion, es decir normalizo el angulo
+            switch (direction) {
+                case (Room.DIRECTION_WEST):
+                    position.x -= distance;
+                    break;
+                case (Room.DIRECTION_EAST):
+                    position.x += distance;
+                    break;
+                case (Room.DIRECTION_NORTH):
+                    position.y -= distance;
+                    break;
+                case (Room.DIRECTION_SOUTH):
+                    position.y += distance;
+                    break;
+            }
         }
-        //this.injure(damage);
+        this.injure(damage);
     }
 
     public boolean isDead() {
