@@ -22,6 +22,8 @@ public interface Placeable {
     public void setRoom(Room room);
 
     public Room getRoom();
+    
+    public void setOrientation(int orientation);
 
     //
 

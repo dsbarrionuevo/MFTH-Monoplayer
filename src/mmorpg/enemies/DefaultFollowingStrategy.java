@@ -13,12 +13,12 @@ import org.newdawn.slick.geom.Vector2f;
 public class DefaultFollowingStrategy extends FollowingStrategy {
 
     public DefaultFollowingStrategy(Placeable chaser, float speed) {
-        super(chaser,speed);
+        super(chaser, speed);
     }
 
     public void update(GameContainer gc, int delta) {
         if (target != null) {
-            float moveFactor = 7f * (delta / 100f);
+            float moveFactor = speed * (delta / 100f);
             Room room = chaser.getRoom();
             Tile tileTarget = room.getCurrentTile(target);
             Tile tileChaser = room.getCurrentTile(chaser);
@@ -26,20 +26,24 @@ public class DefaultFollowingStrategy extends FollowingStrategy {
             if (tileTarget.getTileX() < tileChaser.getTileX()) {
                 if (room.canMoveTo(chaser, Room.DIRECTION_WEST)) {
                     chaser.getPosition().x -= moveFactor;
+                    chaser.setOrientation(Room.DIRECTION_WEST);
                 }
             } else if (tileTarget.getTileX() > tileChaser.getTileX()) {
                 if (room.canMoveTo(chaser, Room.DIRECTION_EAST)) {
                     chaser.getPosition().x += moveFactor;
+                    chaser.setOrientation(Room.DIRECTION_EAST);
                 }
             } else if (tileTarget.getTileX() == tileChaser.getTileX()) {
                 //then chase in vertical
                 if (tileTarget.getTileY() < tileChaser.getTileY()) {
                     if (room.canMoveTo(chaser, Room.DIRECTION_NORTH)) {
                         chaser.getPosition().y -= moveFactor;
+                        chaser.setOrientation(Room.DIRECTION_NORTH);
                     }
                 } else if (tileTarget.getTileY() > tileChaser.getTileY()) {
                     if (room.canMoveTo(chaser, Room.DIRECTION_SOUTH)) {
                         chaser.getPosition().y += moveFactor;
+                        chaser.setOrientation(Room.DIRECTION_SOUTH);
                     }
                 }
             }

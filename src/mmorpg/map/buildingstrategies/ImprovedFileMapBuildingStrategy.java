@@ -3,10 +3,9 @@ package mmorpg.map.buildingstrategies;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mmorpg.common.AnimationHolder;
 import mmorpg.enemies.Enemy;
 import mmorpg.enemies.FoolEnemy;
-import mmorpg.enemies.SmartWallEnemy;
-import mmorpg.enemies.WallEnemy;
 import mmorpg.map.Map;
 import mmorpg.map.room.Room;
 import mmorpg.map.room.buildingstrategies.ImprovedFileRoomBuildingStrategy;
@@ -57,10 +56,14 @@ public class ImprovedFileMapBuildingStrategy extends MapBuildingStrategy {
                         if (enemyRoomFile.getEnemy().getEnemyType().getId() == 0) {//0 means wall enemy
                             //tendria que filtrar el tipe de enemigo
                             enemy.setSpeed((float) enemyRoomFile.getEnemy().getEnemyType().getSpeed());
-                            Animation[] animations = new Animation[enemyRoomFile.getEnemy().getAnimations().length];
+                            //Animation[] animations = new Animation[enemyRoomFile.getEnemy().getAnimations().length];
                             int duration = 340;
+                            AnimationHolder animation = new AnimationHolder();
+                            ArrayList<String> animationNames = new ArrayList<>();
+                            ArrayList<Animation> animations = new ArrayList<>();
                             for (int l = 0; l < enemyRoomFile.getEnemy().getAnimations().length; l++) {
                                 String side = enemyRoomFile.getEnemy().getAnimations()[l].getSide();
+                                animationNames.add(side);
                                 AnimationFile animationFile = enemyRoomFile.getEnemy().getAnimations()[l].getAnimationFile();
                                 String path;
                                 Image[] sprites;
@@ -73,17 +76,11 @@ public class ImprovedFileMapBuildingStrategy extends MapBuildingStrategy {
                                         Logger.getLogger(ImprovedFileMapBuildingStrategy.class.getName()).log(Level.SEVERE, null, ex);
                                     }
                                 }
-                                if (side.equalsIgnoreCase("front")) {
-                                    animations[0] = new Animation(sprites, duration, true);
-                                } else if ((side.equalsIgnoreCase("back"))) {
-                                    animations[1] = new Animation(sprites, duration, true);
-                                } else if ((side.equalsIgnoreCase("left"))) {
-                                    animations[2] = new Animation(sprites, duration, true);
-                                } else if ((side.equalsIgnoreCase("right"))) {
-                                    animations[3] = new Animation(sprites, duration, true);
-                                }
+                                animations.add(new Animation(sprites, duration, true));
                             }
-                            enemy.setupAnimations(animations);
+                            animation.setup(animationNames, animations, new int[]{0, 0, 0, 0});
+                            enemy.setAnimation(animation);
+                            enemy.setGraphic(enemy.getAnimation().changeAnimation(animationNames.get(0)));//otherwise, write "front" here
                         }
                         newRoom.addObject(enemy, enemyRoomFile.getPosition().getX(), enemyRoomFile.getPosition().getY());
                     }

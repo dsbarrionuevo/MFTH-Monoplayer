@@ -236,6 +236,7 @@ public class Player extends Movable implements Placeable {
             ArrayList<Animation> animations = new ArrayList<>();
             String model = "model3";
             int duration = 340;
+            //deberia buscar el directorio de imagenes de un archivo de configuracion
             animations.add(new Animation(new Image[]{
                 new Image("res/images/players/" + model + "/front0.png"),
                 new Image("res/images/players/" + model + "/front1.png"),
@@ -320,5 +321,23 @@ public class Player extends Movable implements Placeable {
 
     public boolean isInjure() {
         return this.isInjure;
+    }
+
+    @Override
+    public void setOrientation(int orientation) {
+        switch (orientation) {
+            case (Room.DIRECTION_WEST):
+                graphic = animation.changeAnimation("left");
+                break;
+            case (Room.DIRECTION_EAST):
+                graphic = animation.changeAnimation("right");
+                break;
+            case (Room.DIRECTION_NORTH):
+                graphic = animation.changeAnimation("back");
+                break;
+            case (Room.DIRECTION_SOUTH):
+                graphic = animation.changeAnimation("front");
+                break;
+        }
     }
 }

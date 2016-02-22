@@ -66,23 +66,19 @@ public class DefaultMovingStrategy extends MovingStrategy {
             switch (direction) {
                 case (Room.DIRECTION_WEST):
                     position.x -= moveFactor;
-                    //graphic = walkingLeft;
                     break;
                 case (Room.DIRECTION_EAST):
                     position.x += moveFactor;
-                    //graphic = walkingRight;
                     break;
                 case (Room.DIRECTION_NORTH):
                     position.y -= moveFactor;
-                    //graphic = walkingBack;
                     break;
                 case (Room.DIRECTION_SOUTH):
                     position.y += moveFactor;
-                    //graphic = walkingFront;
                     break;
             }
+            mover.setOrientation(direction);
         }
-        //updateAnimation(delta);
         //return false when stop moving
         return !(prevPosition.x == position.x && prevPosition.y == position.y);
     }

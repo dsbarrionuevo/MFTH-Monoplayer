@@ -26,7 +26,7 @@ public class FoolEnemy extends Enemy {
 
     @Override
     protected void setupMovingStrategy() {
-        this.movingStrategy = new DefaultMovingStrategy(this, speed);
+        this.movingStrategy = new TimedMovingStrategy(this, speed);
     }
 
     @Override

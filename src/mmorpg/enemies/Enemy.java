@@ -1,5 +1,6 @@
 package mmorpg.enemies;
 
+import mmorpg.common.AnimationHolder;
 import mmorpg.common.Movable;
 import mmorpg.common.Placeable;
 import mmorpg.map.room.Room;
@@ -19,7 +20,8 @@ public abstract class Enemy extends Movable implements Placeable {
     public static final int STATE_FOLLOWING = 2;
     //it is in px, but could be in tiles...
     protected float radiusVision, radiusLostContact;
-    protected Animation walkingFront, walkingBack, walkingLeft, walkingRight;
+    //protected Animation walkingFront, walkingBack, walkingLeft, walkingRight;
+    protected AnimationHolder animation;
     protected Room room;
     protected float attackForce;
     protected FollowingStrategy followingStrategy;
@@ -32,9 +34,10 @@ public abstract class Enemy extends Movable implements Placeable {
         this.attackForce = 5; //default
         this.preferredInitState = STATE_PATROL;
         this.state = preferredInitState;
+        this.animation = new AnimationHolder();
         setupFollowingStrategy();
         setupMovingStrategy();
-        setupFollowingParameters(120, 200);
+        setupFollowingParameters(40, 200);
     }
 
     @Override
@@ -63,30 +66,15 @@ public abstract class Enemy extends Movable implements Placeable {
         } else if (state == STATE_FOLLOWING) {
             this.followingStrategy.update(container, delta);
         }
+        if (state != STATE_STILL) {
+            updateAnimation(delta);
+        }
     }
 
     //seria mejor que retorne en lugar de esperar que lo setee dentro
     protected abstract void setupFollowingStrategy();
 
     protected abstract void setupMovingStrategy();
-
-    protected void updateAnimation(int delta) {
-        if (graphic != null) {
-            if (((Animation) graphic).isStopped()) {
-                ((Animation) graphic).start();
-            }
-            ((Animation) graphic).update(delta);
-        }
-    }
-
-    public void setupAnimations(Animation[] animations) {
-        this.walkingFront = animations[0];
-        this.walkingBack = animations[1];
-        this.walkingLeft = animations[2];
-        this.walkingRight = animations[3];
-        setGraphic(walkingFront);
-        ((Animation) graphic).stop();
-    }
 
     public void setTarget(Placeable target) {
         this.followingStrategy.setTarget(target);
@@ -132,4 +120,45 @@ public abstract class Enemy extends Movable implements Placeable {
             this.radiusLostContact = this.radiusVision + 1;
         }
     }
+
+    public void setAnimation(AnimationHolder animation) {
+        this.animation = animation;
+    }
+
+    public AnimationHolder getAnimation() {
+        return animation;
+    }
+
+    @Override
+    public void setRoom(Room room) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Room getRoom() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void updateAnimation(int delta) {
+        animation.updateAnimation(delta);
+    }
+
+    @Override
+    public void setOrientation(int orientation) {
+        switch (orientation) {
+            case (Room.DIRECTION_WEST):
+                graphic = animation.changeAnimation("left");
+                break;
+            case (Room.DIRECTION_EAST):
+                graphic = animation.changeAnimation("right");
+                break;
+            case (Room.DIRECTION_NORTH):
+                graphic = animation.changeAnimation("back");
+                break;
+            case (Room.DIRECTION_SOUTH):
+                graphic = animation.changeAnimation("front");
+                break;
+        }
+    }
+
 }
