@@ -7,12 +7,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import mmorpg.camera.Camera;
 import mmorpg.camera.StatsLayer;
+import mmorpg.common.Placeable;
 import mmorpg.enemies.Enemy;
 import mmorpg.map.room.Room;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -26,6 +28,18 @@ public class MMORPG extends BasicGame {
     private Player player;
     private StatsLayer statsLayer;
     private Room currentRoom;
+
+    @Override
+    public void keyReleased(int key, char c) {
+        super.keyReleased(key, c);
+        //debo comprobar que el juego haya iniciado
+        //57 space
+        if (key == Input.KEY_SPACE && player != null) {
+            ArrayList<Placeable> objects = currentRoom.getObjectsNearby(player);
+            //podría agregar una caracteristica a cada placeable apra ver si es afecatdo por la esapda, por ejemplo un cofre rompible
+            player.attack(objects);
+        }
+    }
 
     public MMORPG() throws SlickException {
         super("MMORPG");
@@ -60,21 +74,18 @@ public class MMORPG extends BasicGame {
         ArrayList<Enemy> enemies = currentRoom.getEnemies();
         for (int i = 0; i < enemies.size(); i++) {
             Enemy enemy = enemies.get(i);
+            if (enemy.isDead()) {
+                currentRoom.removeObject(enemy);
+                continue;
+            }
             if (enemy.collide(player)) {
-                if (player.isAttacking()) {
-                    enemy.injure(player.getAttackForce(), player.getPosition());
-                    if (enemy.isDead()) {
-                        currentRoom.removeObject(enemy);
-                    }
-                } else {
-                    if (!player.isInjure()) {
-                        player.injure();
-                        float enemyAttackForce = enemy.getAttackForce();
-                        player.setLife(player.getLife() - enemyAttackForce);
-                        statsLayer.decreaseLifeBar(enemyAttackForce);
-                        if (player.getLife() <= 0) {
-                            System.out.println("GAMEOVER");
-                        }
+                if (!player.isInjure()) {
+                    player.injure();
+                    float enemyAttackForce = enemy.getAttackForce();
+                    player.setLife(player.getLife() - enemyAttackForce);
+                    statsLayer.decreaseLifeBar(enemyAttackForce);
+                    if (player.getLife() <= 0) {
+                        System.out.println("GAMEOVER");
                     }
                 }
             }

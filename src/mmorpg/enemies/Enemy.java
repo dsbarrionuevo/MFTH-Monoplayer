@@ -3,8 +3,9 @@ package mmorpg.enemies;
 import mmorpg.common.AnimationHolder;
 import mmorpg.common.Movable;
 import mmorpg.common.Placeable;
+import mmorpg.common.Timer;
+import mmorpg.common.TimerListener;
 import mmorpg.map.room.Room;
-import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
@@ -13,7 +14,7 @@ import org.newdawn.slick.geom.Vector2f;
  *
  * @author Diego
  */
-public abstract class Enemy extends Movable implements Placeable {
+public abstract class Enemy extends Movable implements Placeable, TimerListener {
 
     public static final int STATE_STILL = 0;
     public static final int STATE_PATROL = 1;
@@ -28,14 +29,18 @@ public abstract class Enemy extends Movable implements Placeable {
     protected MovingStrategy movingStrategy;
     protected int preferredInitState;
     protected int state;
+    private int attackerDirection;
+    private Timer timerBeingAttacked;
 
     public Enemy(float speed, Vector2f position, Shape body) {
         super(speed, position, body);
-        this.life = 1000; //default
+        this.life = 200; //default
         this.attackForce = 5; //default
         this.preferredInitState = STATE_PATROL;
         this.state = preferredInitState;
         this.animation = new AnimationHolder();
+        this.timerBeingAttacked = new Timer(1, 60);
+        this.timerBeingAttacked.addListener(this);
         setupFollowingStrategy();
         setupMovingStrategy();
         setupFollowingParameters(120, 200);
@@ -44,6 +49,7 @@ public abstract class Enemy extends Movable implements Placeable {
     @Override
     public void update(GameContainer container, int delta) {
         Placeable target = followingStrategy.getTarget();
+        timerBeingAttacked.update(delta);
         if (target != null) {
             Vector2f originPosition = room.getOriginPosition();
             Vector2f targetPosition = new Vector2f(target.getPosition().x - originPosition.x + target.getWidth() / 2, target.getPosition().y - originPosition.y + target.getHeight() / 2);
@@ -51,13 +57,10 @@ public abstract class Enemy extends Movable implements Placeable {
             float distance = (float) Math.sqrt((targetPosition.x - chaserPosition.x) * (targetPosition.x - chaserPosition.x) + (targetPosition.y - chaserPosition.y) * (targetPosition.y - chaserPosition.y));
             if (state == STATE_STILL || state == STATE_PATROL) {
                 if (distance < this.radiusVision) {
-                    //System.out.println(System.currentTimeMillis());
-                    //chase target, better could be to raise an event and chase take care of how chase the target
                     state = STATE_FOLLOWING;
                 }
             } else if (state == STATE_FOLLOWING) {
                 if (distance > this.radiusLostContact) {
-                    //chaser.stopFollowing();
                     state = preferredInitState;
                 }
             }
@@ -66,6 +69,28 @@ public abstract class Enemy extends Movable implements Placeable {
             this.movingStrategy.update(container, delta);
         } else if (state == STATE_FOLLOWING) {
             this.followingStrategy.update(container, delta);
+        }
+        if (timerBeingAttacked.isRunning()) {
+            float distance = speed * 2 * (delta / 100f);
+            if (room.canMoveTo(this, attackerDirection)) {
+                //position.x += Math.cos(angle) * distance * (-1);
+                //position.y += Math.sin(angle) * distance * (-1);
+                //en lugar de correrlo un angulo, voy a correrlo una direccion, es decir normalizo el angulo
+                switch (attackerDirection) {
+                    case (Room.DIRECTION_WEST):
+                        position.x -= distance;
+                        break;
+                    case (Room.DIRECTION_EAST):
+                        position.x += distance;
+                        break;
+                    case (Room.DIRECTION_NORTH):
+                        position.y -= distance;
+                        break;
+                    case (Room.DIRECTION_SOUTH):
+                        position.y += distance;
+                        break;
+                }
+            }
         }
         if (state != STATE_STILL) {
             updateAnimation(delta);
@@ -172,44 +197,28 @@ public abstract class Enemy extends Movable implements Placeable {
         double degrees = angle * (180 / Math.PI) + 180;
         int direction = -1;
         if (degrees >= 45 && degrees < 135) {
-            System.out.println("DIRECTION_SOUTH");
             direction = Room.DIRECTION_SOUTH;
         } else if (degrees >= 135 && degrees < 225) {
-            System.out.println("DIRECTION_WEST");
             direction = Room.DIRECTION_WEST;
         } else if (degrees >= 225 && degrees < 315) {
-            System.out.println("DIRECTION_NORTH");
             direction = Room.DIRECTION_NORTH;
         } else if ((degrees >= 315 && degrees <= 360) || (degrees >= 0 && degrees < 45)) {
-            System.out.println("DIRECTION_EAST");
             direction = Room.DIRECTION_EAST;
         }
-        System.out.println(degrees);
-        float distance = 0.2f;//px
-        if (room.canMoveTo(this, direction)) {
-            //position.x += Math.cos(angle) * distance * (-1);
-            //position.y += Math.sin(angle) * distance * (-1);
-            //en lugar de correrlo un angulo, voy a correrlo una direccion, es decir normalizo el angulo
-            switch (direction) {
-                case (Room.DIRECTION_WEST):
-                    position.x -= distance;
-                    break;
-                case (Room.DIRECTION_EAST):
-                    position.x += distance;
-                    break;
-                case (Room.DIRECTION_NORTH):
-                    position.y -= distance;
-                    break;
-                case (Room.DIRECTION_SOUTH):
-                    position.y += distance;
-                    break;
-            }
-        }
+        attackerDirection = direction;
+        timerBeingAttacked.start();
         this.injure(damage);
     }
 
     public boolean isDead() {
         return this.life <= 0;
+    }
+
+    @Override
+    public void finished(int timerId) {
+        if (timerId == 1) {
+            //end being attacked
+        }
     }
 
 }

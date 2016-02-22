@@ -6,6 +6,9 @@ import java.util.logging.Logger;
 import mmorpg.common.AnimationHolder;
 import mmorpg.common.Movable;
 import mmorpg.common.Placeable;
+import mmorpg.common.Timer;
+import mmorpg.common.TimerListener;
+import mmorpg.enemies.Enemy;
 import mmorpg.map.room.Room;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
@@ -16,13 +19,12 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.util.InputAdapter;
 
 /**
  *
  * @author Diego
  */
-public class Player extends Movable implements Placeable {
+public class Player extends Movable implements Placeable, TimerListener {
 
     public static final int STATE_WALKING = 0;
     public static final int STATE_STILL = 1;
@@ -31,27 +33,21 @@ public class Player extends Movable implements Placeable {
     private float life;
     private float attackForce;
     private int state;
-    //
-    private boolean isInjure;
-    private long timerHealInjure;
-    private long timerToHealInjure;
-    private long timerHitTheDoor;
-    private long timerToHitTheDoor;
-    //
-    //private Animation walkingFront, walkingBack, walkingLeft, walkingRight;
+    private Timer timerAppearsSword, timerHealInjure, timerHitTheDoor;
     private AnimationHolder animation;
 
     public Player() {
         super(10f, new Vector2f(), new Rectangle(0, 0, 32, 32));
         this.state = STATE_STILL;
-        this.timerHitTheDoor = 0;
-        this.timerToHitTheDoor = 1 * 1000;
-        this.timerHealInjure = 0;
-        this.timerToHealInjure = 2 * 1000;
         this.life = 100;
         this.attackForce = 10;
-        //
-        this.isInjure = false;
+        this.timerHitTheDoor = new Timer(3, 1000, true);
+        this.timerHitTheDoor.addListener(this);
+        this.timerHitTheDoor.start();
+        this.timerHealInjure = new Timer(2, 2000);
+        this.timerHealInjure.addListener(this);
+        this.timerAppearsSword = new Timer(1, 140);
+        this.timerAppearsSword.addListener(this);
         animation = new AnimationHolder();
         setupAnimations();
     }
@@ -59,10 +55,9 @@ public class Player extends Movable implements Placeable {
     @Override
     public void update(GameContainer container, int delta) {
         move(container, delta);
-        checkIfAttack(container, delta);
-        //check if stand on door
-        checkHitDoor(delta);
-        checkHealInjure(delta);
+        timerAppearsSword.update(delta);
+        timerHealInjure.update(delta);
+        timerHitTheDoor.update(delta);
     }
 
     @Override
@@ -75,7 +70,7 @@ public class Player extends Movable implements Placeable {
         } else {
             g.fill(body);
         }
-        if (this.state == STATE_ATTACKING) {
+        if (timerAppearsSword.isRunning()) {
             g.setColor(Color.blue);
             float swordWidth = 18;
             float swordHeight = 2;
@@ -101,131 +96,73 @@ public class Player extends Movable implements Placeable {
             }
             g.fill(sword);
         }
-        if (this.isInjure) {
+        if (this.timerHealInjure.isRunning()) {
             g.setColor(Color.red);
             g.fillRect(position.x + width / 2 - 10, position.y + height / 2 - 10, 20, 20);
         }
     }
 
-    private void checkIfAttack(GameContainer container, int delta) {
-        Input input = container.getInput();
-        if (input.isKeyDown(Input.KEY_SPACE)) {
-            //animacion de ataque
-            this.state = STATE_ATTACKING;
-        } else {
-            this.state = STATE_STILL;
-        }
-    }
-
-    private void checkHitDoor(int delta) {
-        if (this.timerHitTheDoor > this.timerToHitTheDoor) {
-            if (room.hitTheDoor(this)) {
-                this.timerHitTheDoor = 0;
+    public void attack(ArrayList<Placeable> objects) {
+        for (int i = 0; i < objects.size(); i++) {
+            Placeable object = objects.get(i);
+            if (object instanceof Enemy) {
+                Enemy enemy = (Enemy) object;
+                if (collide(enemy)) {
+                    enemy.injure(getAttackForce(), getPosition());
+                }
             }
         }
-        this.timerHitTheDoor += delta;
-    }
-
-    private void checkHealInjure(int delta) {
-        if (this.isInjure == true) {
-            this.timerHealInjure += delta;
-            if (this.timerHealInjure > this.timerToHealInjure) {
-                this.timerHealInjure = 0;
-                this.isInjure = false;
-            }
-        }
+        this.timerAppearsSword.start();
+        //this.state = STATE_ATTACKING;
     }
 
     private void move(GameContainer container, int delta) {
         Input input = container.getInput();
-        //if (state != STATE_ATTACKING) {
         float moveFactor = speed * (delta / 100f);
-        //this.state = STATE_STILL;
         if (input.isKeyDown(Input.KEY_LEFT) && room.canMoveTo(this, Room.DIRECTION_WEST) && room.movingInsideCamera(this, moveFactor, Room.DIRECTION_WEST)) {
             position.x -= moveFactor;
             updateAnimation(delta);
+            setOrientation(Room.DIRECTION_WEST);
             this.state = STATE_WALKING;
         }
         if (input.isKeyDown(Input.KEY_RIGHT) && room.canMoveTo(this, Room.DIRECTION_EAST) && room.movingInsideCamera(this, moveFactor, Room.DIRECTION_EAST)) {
             position.x += moveFactor;
             updateAnimation(delta);
+            setOrientation(Room.DIRECTION_EAST);
             this.state = STATE_WALKING;
         }
         if (input.isKeyDown(Input.KEY_UP) && room.canMoveTo(this, Room.DIRECTION_NORTH) && room.movingInsideCamera(this, moveFactor, Room.DIRECTION_NORTH)) {
             position.y -= moveFactor;
             updateAnimation(delta);
+            setOrientation(Room.DIRECTION_NORTH);
             this.state = STATE_WALKING;
         }
         if (input.isKeyDown(Input.KEY_DOWN) && room.canMoveTo(this, Room.DIRECTION_SOUTH) && room.movingInsideCamera(this, moveFactor, Room.DIRECTION_SOUTH)) {
             position.y += moveFactor;
             updateAnimation(delta);
+            setOrientation(Room.DIRECTION_SOUTH);
             this.state = STATE_WALKING;
         }
         if (input.isKeyDown(Input.KEY_LEFT)) {
             graphic = animation.changeAnimation("left");
-            //graphic = walkingLeft;
         } else if (input.isKeyDown(Input.KEY_RIGHT)) {
-            //graphic = walkingRight;
             graphic = animation.changeAnimation("right");
         } else if (input.isKeyDown(Input.KEY_UP)) {
-            //graphic = walkingBack;
             graphic = animation.changeAnimation("back");
         } else if (input.isKeyDown(Input.KEY_DOWN)) {
-            //graphic = walkingFront;
             graphic = animation.changeAnimation("front");
         }
         if (!input.isKeyDown(Input.KEY_LEFT) && !input.isKeyDown(Input.KEY_RIGHT) && !input.isKeyDown(Input.KEY_UP) && !input.isKeyDown(Input.KEY_DOWN)) {
-            /*if (graphic != null) {
-             ((Animation) graphic).stop();
-             ((Animation) graphic).setCurrentFrame(0);
-             }*/
             animation.still();
         }
         //}
     }
 
     private void updateAnimation(int delta) {
-        /*if (graphic != null) {
-         if (((Animation) graphic).isStopped()) {
-         ((Animation) graphic).start();
-         }
-         ((Animation) graphic).update(delta);
-         }*/
         animation.updateAnimation(delta);
     }
 
     private void setupAnimations() {
-        /*
-         try {
-         //speed: 10px ==> duration: 340 milis
-         int duration = 340;
-         //animations
-         String model = "model1";
-         this.walkingFront = new Animation(new Image[]{
-         new Image("res/images/players/" + model + "/front0.png"),
-         new Image("res/images/players/" + model + "/front1.png"),
-         new Image("res/images/players/" + model + "/front2.png")
-         }, duration, true);
-         this.walkingBack = new Animation(new Image[]{
-         new Image("res/images/players/" + model + "/back0.png"),
-         new Image("res/images/players/" + model + "/back1.png"),
-         new Image("res/images/players/" + model + "/back2.png")
-         }, duration, true);
-         this.walkingLeft = new Animation(new Image[]{
-         new Image("res/images/players/" + model + "/left0.png"),
-         new Image("res/images/players/" + model + "/left1.png"),
-         new Image("res/images/players/" + model + "/left2.png")
-         }, duration, true);
-         this.walkingRight = new Animation(new Image[]{
-         new Image("res/images/players/" + model + "/right0.png"),
-         new Image("res/images/players/" + model + "/right1.png"),
-         new Image("res/images/players/" + model + "/right2.png")
-         }, duration, true);
-         setGraphic(walkingFront);
-         ((Animation) graphic).stop();
-         } catch (SlickException ex) {
-         Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
-         }*/
         try {
             animation = new AnimationHolder();
             ArrayList<String> animationNames = new ArrayList<>();
@@ -258,7 +195,7 @@ public class Player extends Movable implements Placeable {
                 new Image("res/images/players/" + model + "/right2.png")
             }, duration, true));
             animation.setup(animationNames, animations, new int[]{0, 0, 0, 0});
-            graphic = animation.changeAnimation("front");
+            setOrientation(Room.DIRECTION_SOUTH);
         } catch (SlickException ex) {
             Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -309,18 +246,12 @@ public class Player extends Movable implements Placeable {
         this.attackForce = attackForce;
     }
 
-    public boolean isAttacking() {
-        return this.state == STATE_ATTACKING;
-    }
-
     public void injure() {
-        if (this.isInjure == false && this.timerHealInjure == 0) {
-            this.isInjure = true;
-        }
+        timerHealInjure.start();
     }
 
     public boolean isInjure() {
-        return this.isInjure;
+        return this.timerHealInjure.isRunning();
     }
 
     @Override
@@ -337,6 +268,19 @@ public class Player extends Movable implements Placeable {
                 break;
             case (Room.DIRECTION_SOUTH):
                 graphic = animation.changeAnimation("front");
+                break;
+        }
+    }
+
+    @Override
+    public void finished(int timerId) {
+        switch (timerId) {
+            case (1)://appears sword
+                break;
+            case (2)://heal injure
+                break;
+            case (3)://pass throught door
+                room.hitTheDoor(this);
                 break;
         }
     }

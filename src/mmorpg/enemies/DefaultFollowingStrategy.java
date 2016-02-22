@@ -52,7 +52,7 @@ public class DefaultFollowingStrategy extends FollowingStrategy {
                 Vector2f targetPosition = new Vector2f(target.getPosition().x + target.getWidth() / 2, target.getPosition().y + target.getHeight() / 2);
                 Vector2f chaserPosition = new Vector2f(chaser.getPosition().x + chaser.getWidth() / 2, chaser.getPosition().y + chaser.getHeight() / 2);
                 float distance = (float) Math.sqrt((targetPosition.x - chaserPosition.x) * (targetPosition.x - chaserPosition.x) - (targetPosition.y - chaserPosition.y) * (targetPosition.y - chaserPosition.y));
-                if (distance > 5) {
+                if (distance > 16) {
                     double angle = Math.atan2(targetPosition.y - chaserPosition.y, targetPosition.x - chaserPosition.x);
                     chaser.getPosition().x += Math.cos(angle) * moveFactor;
                     chaser.getPosition().y += Math.sin(angle) * moveFactor;

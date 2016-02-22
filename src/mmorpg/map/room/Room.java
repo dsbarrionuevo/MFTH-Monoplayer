@@ -435,6 +435,28 @@ public class Room {
         return objects;
     }
 
+    public ArrayList<Placeable> getObjectsNearby(Placeable placeable) {
+        return getObjectsNearby(placeable, 200);
+    }
+
+    public ArrayList<Placeable> getObjectsNearby(Placeable placeable, float radius) {
+        ArrayList<Placeable> found = new ArrayList<>();
+        Vector2f originPosition = getOriginPosition();
+        Vector2f placeablePosition = new Vector2f(placeable.getPosition().x - originPosition.x + placeable.getWidth() / 2, placeable.getPosition().y - originPosition.y + placeable.getHeight() / 2);
+        float distance;
+        for (int i = 0; i < objects.size(); i++) {
+            Placeable object = objects.get(i);
+            if (!object.equals(placeable)) {
+                Vector2f objectPosition = new Vector2f(object.getPosition().x - originPosition.x + object.getWidth() / 2, object.getPosition().y - originPosition.y + object.getHeight() / 2);
+                distance = (float) Math.sqrt((placeablePosition.x - objectPosition.x) * (placeablePosition.x - objectPosition.x) + (placeablePosition.y - objectPosition.y) * (placeablePosition.y - objectPosition.y));
+                if (distance < radius) {
+                    found.add(object);
+                }
+            }
+        }
+        return found;
+    }
+
     public ArrayList<Enemy> getEnemies() {
         ArrayList<Enemy> found = new ArrayList<>();
         for (int i = 0; i < objects.size(); i++) {
@@ -454,8 +476,7 @@ public class Room {
 //        }
 //        return found;
 //    }
-    
-    public Vector2f getOriginPosition(){
+    public Vector2f getOriginPosition() {
         return room[0][0].getPosition();
     }
 }
