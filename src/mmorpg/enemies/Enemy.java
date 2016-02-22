@@ -12,38 +12,56 @@ import org.newdawn.slick.geom.Vector2f;
  *
  * @author Diego
  */
-public abstract class Enemy extends Movable implements Placeable, Chaser {
+public abstract class Enemy extends Movable implements Placeable {
 
     public static final int STATE_STILL = 0;
     public static final int STATE_PATROL = 1;
     public static final int STATE_FOLLOWING = 2;
+    //it is in px, but could be in tiles...
+    protected float radiusVision, radiusLostContact;
     protected Animation walkingFront, walkingBack, walkingLeft, walkingRight;
     protected Room room;
     protected float attackForce;
     protected FollowingStrategy followingStrategy;
     protected MovingStrategy movingStrategy;
+    protected int preferredInitState;
     protected int state;
 
     public Enemy(float speed, Vector2f position, Shape body) {
         super(speed, position, body);
         this.attackForce = 5; //default
-        this.state = STATE_STILL;
+        this.preferredInitState = STATE_PATROL;
+        this.state = preferredInitState;
         setupFollowingStrategy();
         setupMovingStrategy();
+        setupFollowingParameters(120, 200);
     }
 
     @Override
     public void update(GameContainer container, int delta) {
-        this.followingStrategy.update(container, delta);
-        switch (this.state) {
-            case (STATE_PATROL):
-                this.movingStrategy.update(container, delta);
-                break;
-            case (STATE_FOLLOWING):
-                //this.followingStrategy.update(container, delta);
-                break;
-            case (STATE_STILL):
-                break;
+        Placeable target = followingStrategy.getTarget();
+        if (target != null) {
+            Vector2f originPosition = room.getOriginPosition();
+            Vector2f targetPosition = new Vector2f(target.getPosition().x - originPosition.x + target.getWidth() / 2, target.getPosition().y - originPosition.y + target.getHeight() / 2);
+            Vector2f chaserPosition = new Vector2f(getPosition().x - originPosition.x + getWidth() / 2, getPosition().y - originPosition.y + getHeight() / 2);
+            float distance = (float) Math.sqrt((targetPosition.x - chaserPosition.x) * (targetPosition.x - chaserPosition.x) + (targetPosition.y - chaserPosition.y) * (targetPosition.y - chaserPosition.y));
+            if (state == STATE_STILL || state == STATE_PATROL) {
+                if (distance < this.radiusVision) {
+                    //System.out.println(System.currentTimeMillis());
+                    //chase target, better could be to raise an event and chase take care of how chase the target
+                    state = STATE_FOLLOWING;
+                }
+            } else if (state == STATE_FOLLOWING) {
+                if (distance > this.radiusLostContact) {
+                    //chaser.stopFollowing();
+                    state = preferredInitState;
+                }
+            }
+        }
+        if (state == STATE_PATROL) {
+            this.movingStrategy.update(container, delta);
+        } else if (state == STATE_FOLLOWING) {
+            this.followingStrategy.update(container, delta);
         }
     }
 
@@ -106,15 +124,12 @@ public abstract class Enemy extends Movable implements Placeable, Chaser {
         return attackForce;
     }
 
-    @Override
-    public void startFollowing() {
-        this.state = STATE_FOLLOWING;
-        System.out.println("FOLLOWING");
-    }
-
-    @Override
-    public void stopFollowing() {
-        this.state = STATE_STILL;
-        System.out.println("STOP FOLLOWING");
+    private void setupFollowingParameters(float radiusVision, float radiusLostContact) {
+        this.radiusVision = radiusVision;
+        this.radiusLostContact = radiusLostContact;
+        //the radius of vision always has to be less than the radius of lost contact
+        if (this.radiusVision >= this.radiusLostContact) {
+            this.radiusLostContact = this.radiusVision + 1;
+        }
     }
 }

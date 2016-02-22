@@ -43,7 +43,7 @@ public class WallEnemy extends Enemy {
             } else {
                 g.fill(body);
             }
-            this.followingStrategy.render(this, gc, g);
+            //this.followingStrategy.render(this, gc, g);
         }
     }
 
@@ -123,4 +123,5 @@ public class WallEnemy extends Enemy {
     protected void setupMovingStrategy() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
 }

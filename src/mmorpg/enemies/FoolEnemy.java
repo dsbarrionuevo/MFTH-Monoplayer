@@ -5,8 +5,8 @@ import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 /**
@@ -21,7 +21,7 @@ public class FoolEnemy extends Enemy {
 
     @Override
     protected void setupFollowingStrategy() {
-        this.followingStrategy = new DefaultFollowingStrategy(this);
+        this.followingStrategy = new DefaultFollowingStrategy(this, speed);
     }
 
     @Override
@@ -40,7 +40,11 @@ public class FoolEnemy extends Enemy {
             } else {
                 g.fill(body);
             }
-            this.followingStrategy.render(this, gc, g);
+            //render radius
+            g.setColor(Color.yellow);
+            g.draw(new Circle(getPosition().x + getWidth() / 2, getPosition().y + getHeight() / 2, radiusVision));
+            g.setColor(Color.red);
+            g.draw(new Circle(getPosition().x + getWidth() / 2, getPosition().y + getHeight() / 2, radiusLostContact));
         }
     }
 
