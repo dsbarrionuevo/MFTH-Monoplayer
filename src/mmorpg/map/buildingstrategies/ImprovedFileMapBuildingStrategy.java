@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mmorpg.enemies.Enemy;
+import mmorpg.enemies.FoolEnemy;
 import mmorpg.enemies.SmartWallEnemy;
 import mmorpg.enemies.WallEnemy;
 import mmorpg.map.Map;
@@ -52,9 +53,9 @@ public class ImprovedFileMapBuildingStrategy extends MapBuildingStrategy {
                     EnemyRoomFile[] enemiesRoomFile = roomFile.getEnemies();
                     for (int k = 0; k < enemiesRoomFile.length; k++) {
                         EnemyRoomFile enemyRoomFile = enemiesRoomFile[k];
-                        Enemy enemy = new WallEnemy();//default...
+                        Enemy enemy = new FoolEnemy();
                         if (enemyRoomFile.getEnemy().getEnemyType().getId() == 0) {//0 means wall enemy
-                            enemy = new SmartWallEnemy();
+                            //tendria que filtrar el tipe de enemigo
                             enemy.setSpeed((float) enemyRoomFile.getEnemy().getEnemyType().getSpeed());
                             Animation[] animations = new Animation[enemyRoomFile.getEnemy().getAnimations().length];
                             int duration = 340;

@@ -113,4 +113,14 @@ public class WallEnemy extends Enemy {
     public Room getRoom() {
         return this.room;
     }
+
+    @Override
+    protected void setupFollowingStrategy() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected void setupMovingStrategy() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

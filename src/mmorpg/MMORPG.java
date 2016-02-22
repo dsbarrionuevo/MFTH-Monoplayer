@@ -43,6 +43,10 @@ public class MMORPG extends BasicGame {
         player = new Player();
         currentRoom = map.getCurrentRoom();
         currentRoom.addObject(player, 1, 1);
+        ArrayList<Enemy> enemies = currentRoom.getEnemies();
+        for (int i = 0; i < enemies.size(); i++) {
+            enemies.get(i).setTarget(player);
+        }
         currentRoom.focusObject(player);
         //
         statsLayer = new StatsLayer();
@@ -56,8 +60,6 @@ public class MMORPG extends BasicGame {
         ArrayList<Enemy> enemies = currentRoom.getEnemies();
         for (int i = 0; i < enemies.size(); i++) {
             Enemy enemy = enemies.get(i);
-            //esto lo deberia hacer cada enemigo en su update, pero el enemigo no sabe cual es su target y este puede cambiar... (puede ser null cuando el jugador deja la sala)
-            enemy.updateFollowingStrategy(player, delta);
             if (enemy.collide(player)) {
                 if (player.isAttacking()) {
                     //kill enemy

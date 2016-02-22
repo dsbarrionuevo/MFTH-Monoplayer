@@ -8,5 +8,8 @@ import mmorpg.common.Placeable;
  */
 public class DefaultFollowingStrategy extends FollowingStrategy {
 
-    
+    public DefaultFollowingStrategy(Chaser chaser) {
+        super(chaser);
+    }
+
 }

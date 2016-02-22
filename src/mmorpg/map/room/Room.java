@@ -454,4 +454,8 @@ public class Room {
 //        }
 //        return found;
 //    }
+    
+    public Vector2f getOriginPosition(){
+        return room[0][0].getPosition();
+    }
 }
