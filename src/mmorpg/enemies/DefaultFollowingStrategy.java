@@ -18,32 +18,18 @@ public class DefaultFollowingStrategy extends FollowingStrategy {
 
     public void update(GameContainer gc, int delta) {
         if (target != null) {
+            Vector2f prevPosition = chaser.getPosition();
             float moveFactor = speed * (delta / 100f);
             Room room = chaser.getRoom();
             Tile tileTarget = room.getCurrentTile(target);
             Tile tileChaser = room.getCurrentTile(chaser);
             //first chase in horizontal
-            if (tileTarget.getTileX() < tileChaser.getTileX()) {
-                if (room.canMoveTo(chaser, Room.DIRECTION_WEST)) {
-                    chaser.getPosition().x -= moveFactor;
-                    chaser.setOrientation(Room.DIRECTION_WEST);
-                }
-            } else if (tileTarget.getTileX() > tileChaser.getTileX()) {
-                if (room.canMoveTo(chaser, Room.DIRECTION_EAST)) {
-                    chaser.getPosition().x += moveFactor;
-                    chaser.setOrientation(Room.DIRECTION_EAST);
-                }
-            } else if (tileTarget.getTileX() == tileChaser.getTileX()) {
-                //then chase in vertical
-                if (tileTarget.getTileY() < tileChaser.getTileY()) {
-                    if (room.canMoveTo(chaser, Room.DIRECTION_NORTH)) {
-                        chaser.getPosition().y -= moveFactor;
-                        chaser.setOrientation(Room.DIRECTION_NORTH);
-                    }
-                } else if (tileTarget.getTileY() > tileChaser.getTileY()) {
-                    if (room.canMoveTo(chaser, Room.DIRECTION_SOUTH)) {
-                        chaser.getPosition().y += moveFactor;
-                        chaser.setOrientation(Room.DIRECTION_SOUTH);
+            if (!canMoveHorizontal(prevPosition, room, tileTarget, tileChaser, moveFactor)) {
+                if(!canMoveVertical(prevPosition, room, tileTarget, tileChaser, moveFactor)){
+                    if(tileTarget.getTileX() == tileChaser.getTileX() && (tileTarget.getTileY() == tileChaser.getTileY())){
+                        //found
+                    }else{
+                        //change strategy
                     }
                 }
             }
@@ -59,6 +45,40 @@ public class DefaultFollowingStrategy extends FollowingStrategy {
                 }
             }
         }
+    }
+
+    private boolean canMoveHorizontal(Vector2f prevPosition, Room room, Tile tileTarget, Tile tileChaser, float moveFactor) {
+        if (tileTarget.getTileX() < tileChaser.getTileX()) {
+            if (room.canMoveTo(chaser, Room.DIRECTION_WEST)) {
+                chaser.getPosition().x -= moveFactor;
+                chaser.setOrientation(Room.DIRECTION_WEST);
+            }
+        } else if (tileTarget.getTileX() > tileChaser.getTileX()) {
+            if (room.canMoveTo(chaser, Room.DIRECTION_EAST)) {
+                chaser.getPosition().x += moveFactor;
+                chaser.setOrientation(Room.DIRECTION_EAST);
+            }
+        } else if (tileTarget.getTileX() == tileChaser.getTileX()) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean canMoveVertical(Vector2f prevPosition, Room room, Tile tileTarget, Tile tileChaser, float moveFactor) {
+        if (tileTarget.getTileY() < tileChaser.getTileY()) {
+            if (room.canMoveTo(chaser, Room.DIRECTION_NORTH)) {
+                chaser.getPosition().y -= moveFactor;
+                chaser.setOrientation(Room.DIRECTION_NORTH);
+            }
+        } else if (tileTarget.getTileY() > tileChaser.getTileY()) {
+            if (room.canMoveTo(chaser, Room.DIRECTION_SOUTH)) {
+                chaser.getPosition().y += moveFactor;
+                chaser.setOrientation(Room.DIRECTION_SOUTH);
+            }
+        } else if (tileTarget.getTileY() == tileChaser.getTileY()) {
+            return false;
+        }
+        return true;
     }
 
 }

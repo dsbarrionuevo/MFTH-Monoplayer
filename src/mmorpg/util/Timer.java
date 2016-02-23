@@ -1,4 +1,4 @@
-package mmorpg.common;
+package mmorpg.util;
 
 import java.util.ArrayList;
 

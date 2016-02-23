@@ -6,8 +6,8 @@ import java.util.logging.Logger;
 import mmorpg.common.AnimationHolder;
 import mmorpg.common.Movable;
 import mmorpg.common.Placeable;
-import mmorpg.common.Timer;
-import mmorpg.common.TimerListener;
+import mmorpg.util.Timer;
+import mmorpg.util.TimerListener;
 import mmorpg.enemies.Enemy;
 import mmorpg.map.room.Room;
 import org.newdawn.slick.Animation;
@@ -35,6 +35,7 @@ public class Player extends Movable implements Placeable, TimerListener {
     private int state;
     private Timer timerAppearsSword, timerHealInjure, timerHitTheDoor;
     private AnimationHolder animation;
+    private Sword sword;
 
     public Player() {
         super(10f, new Vector2f(), new Rectangle(0, 0, 32, 32));
@@ -48,6 +49,8 @@ public class Player extends Movable implements Placeable, TimerListener {
         this.timerHealInjure.addListener(this);
         this.timerAppearsSword = new Timer(1, 140);
         this.timerAppearsSword.addListener(this);
+        sword = new Sword();
+        sword.setVisible(true);
         animation = new AnimationHolder();
         setupAnimations();
     }
@@ -58,6 +61,35 @@ public class Player extends Movable implements Placeable, TimerListener {
         timerAppearsSword.update(delta);
         timerHealInjure.update(delta);
         timerHitTheDoor.update(delta);
+//        float swordMaxLength = 28;
+//        float swordMinLength = 12;
+        if (timerAppearsSword.isRunning()) {
+            Vector2f swordPostion = new Vector2f(position.x + getWidth() / 2 - sword.getWidth() / 2, position.y + getHeight() / 2 - sword.getHeight() / 2);
+            if (animation.getCurrentAnimationName() == "left") {
+                sword.setOrientation(Room.DIRECTION_WEST);
+                swordPostion.x -= (getWidth() / 2 + 5);
+                //sword.setWidth(swordMaxLength);
+                //sword.setHeight(swordMinLength);
+            } else if (animation.getCurrentAnimationName() == "right") {
+                sword.setOrientation(Room.DIRECTION_EAST);
+                swordPostion.x += (getWidth() / 2 + 5);
+//                sword.setWidth(swordMaxLength);
+//                sword.setHeight(swordMinLength);
+            } else if (animation.getCurrentAnimationName() == "back") {
+                sword.setOrientation(Room.DIRECTION_NORTH);
+                swordPostion.y -= (getHeight() / 2 + 5);
+//                sword.setWidth(swordMinLength);
+//                sword.setHeight(swordMaxLength);
+            } else if (animation.getCurrentAnimationName() == "front") {
+                sword.setOrientation(Room.DIRECTION_SOUTH);
+                swordPostion.y += (getHeight() / 2 + 5);
+//                sword.setWidth(swordMinLength);
+//                sword.setHeight(swordMaxLength);
+            }
+            sword.setPosition(swordPostion);
+            sword.setVisible(true);
+        }
+
     }
 
     @Override
@@ -71,30 +103,31 @@ public class Player extends Movable implements Placeable, TimerListener {
             g.fill(body);
         }
         if (timerAppearsSword.isRunning()) {
-            g.setColor(Color.blue);
-            float swordWidth = 18;
-            float swordHeight = 2;
-            //horizontal por defecto
-            Rectangle sword = new Rectangle(position.x + width / 2, position.y + height / 2, swordWidth, swordHeight);
-            float awayFromPlayer = 10;
-            if (animation.getCurrentAnimationName() == "left") {
-                sword.setX(sword.getX() - swordWidth - awayFromPlayer);
-                sword.setY(sword.getY() - swordHeight / 2);
-            } else if (animation.getCurrentAnimationName() == "right") {
-                sword.setX(sword.getX() + awayFromPlayer);
-                sword.setY(sword.getY() - swordHeight / 2);
-            } else if (animation.getCurrentAnimationName() == "back") {
-                sword.setY(sword.getY() - swordWidth - awayFromPlayer);
-                sword.setX(sword.getX() - swordHeight / 2);
-                sword.setHeight(swordWidth);
-                sword.setWidth(swordHeight);
-            } else if (animation.getCurrentAnimationName() == "front") {
-                sword.setY(sword.getY() + awayFromPlayer);
-                sword.setX(sword.getX() - swordHeight / 2);
-                sword.setHeight(swordWidth);
-                sword.setWidth(swordHeight);
-            }
-            g.fill(sword);
+//            g.setColor(Color.blue);
+//            float swordWidth = 18;
+//            float swordHeight = 2;
+//            //horizontal por defecto
+//            Rectangle sword = new Rectangle(position.x + width / 2, position.y + height / 2, swordWidth, swordHeight);
+//            float awayFromPlayer = 10;
+//            if (animation.getCurrentAnimationName() == "left") {
+//                sword.setX(sword.getX() - swordWidth - awayFromPlayer);
+//                sword.setY(sword.getY() - swordHeight / 2);
+//            } else if (animation.getCurrentAnimationName() == "right") {
+//                sword.setX(sword.getX() + awayFromPlayer);
+//                sword.setY(sword.getY() - swordHeight / 2);
+//            } else if (animation.getCurrentAnimationName() == "back") {
+//                sword.setY(sword.getY() - swordWidth - awayFromPlayer);
+//                sword.setX(sword.getX() - swordHeight / 2);
+//                sword.setHeight(swordWidth);
+//                sword.setWidth(swordHeight);
+//            } else if (animation.getCurrentAnimationName() == "front") {
+//                sword.setY(sword.getY() + awayFromPlayer);
+//                sword.setX(sword.getX() - swordHeight / 2);
+//                sword.setHeight(swordWidth);
+//                sword.setWidth(swordHeight);
+//            }
+//            g.fill(sword);
+            sword.render(gc, g);
         }
         if (this.timerHealInjure.isRunning()) {
             g.setColor(Color.red);
@@ -107,7 +140,7 @@ public class Player extends Movable implements Placeable, TimerListener {
             Placeable object = objects.get(i);
             if (object instanceof Enemy) {
                 Enemy enemy = (Enemy) object;
-                if (collide(enemy)) {
+                if (sword.collide(enemy)) {
                     enemy.injure(getAttackForce(), getPosition());
                 }
             }
@@ -276,6 +309,7 @@ public class Player extends Movable implements Placeable, TimerListener {
     public void finished(int timerId) {
         switch (timerId) {
             case (1)://appears sword
+                sword.setVisible(false);
                 break;
             case (2)://heal injure
                 break;

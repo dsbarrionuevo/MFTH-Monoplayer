@@ -3,8 +3,8 @@ package mmorpg.enemies;
 import mmorpg.common.AnimationHolder;
 import mmorpg.common.Movable;
 import mmorpg.common.Placeable;
-import mmorpg.common.Timer;
-import mmorpg.common.TimerListener;
+import mmorpg.util.Timer;
+import mmorpg.util.TimerListener;
 import mmorpg.map.room.Room;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Shape;
@@ -43,7 +43,7 @@ public abstract class Enemy extends Movable implements Placeable, TimerListener 
         this.timerBeingAttacked.addListener(this);
         setupFollowingStrategy();
         setupMovingStrategy();
-        setupFollowingParameters(120, 200);
+        setupFollowingParameters(150, 200);
     }
 
     @Override
