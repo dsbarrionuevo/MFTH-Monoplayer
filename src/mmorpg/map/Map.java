@@ -32,7 +32,7 @@ public class Map {
     public void build() {
         this.buildingStrategy.build(this);
         this.rooms = this.buildingStrategy.getRooms();
-        this.changeRoom(buildingStrategy.getFirstRoom().getRoomId());
+        currentRoom = buildingStrategy.getFirstRoom();
     }
 
     public void render(GameContainer container, Graphics g) throws SlickException {
@@ -50,13 +50,6 @@ public class Map {
         return this.currentRoom.placeObject(placeable, tileX, tileY);
     }
 
-    /*
-     public Room getRoom(int room) {
-     if (room < 0 || room > rooms.size() - 1) {
-     return null;
-     }
-     return this.rooms.get(room);
-     }*/
     public Room getCurrentRoom() {
         return this.currentRoom;
     }
@@ -71,7 +64,6 @@ public class Map {
     }
 
     public void changeRoom(int idNewRoom) {
-        System.out.println("...");
         this.currentRoom = buildingStrategy.getRoomById(idNewRoom);
         for (int i = 0; i < listeners.size(); i++) {
             listeners.get(i).roomChanged(currentRoom);
