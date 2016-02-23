@@ -5,6 +5,7 @@ import java.util.HashMap;
 import mmorpg.camera.Camera;
 import mmorpg.common.Placeable;
 import mmorpg.enemies.Enemy;
+import mmorpg.items.Item;
 import mmorpg.map.Map;
 import mmorpg.map.room.buildingstrategies.RoomBuildingStrategy;
 import mmorpg.map.tiles.DoorTile;
@@ -13,7 +14,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.tests.xml.Item;
 
 /**
  *
@@ -478,5 +478,15 @@ public class Room {
 //    }
     public Vector2f getOriginPosition() {
         return room[0][0].getPosition();
+    }
+
+    public ArrayList<Item> getItems() {
+        ArrayList<Item> found = new ArrayList<>();
+        for (int i = 0; i < objects.size(); i++) {
+            if (objects.get(i) instanceof Item) {
+                found.add((Item) objects.get(i));
+            }
+        }
+        return found;
     }
 }

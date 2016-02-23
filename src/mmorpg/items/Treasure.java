@@ -1,73 +1,42 @@
 package mmorpg.items;
 
-import mmorpg.common.Drawable;
-import mmorpg.common.Placeable;
-import mmorpg.map.room.Room;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
 /**
  *
  * @author Diego
  */
-public class Treasure extends Drawable implements Placeable {
+public class Treasure extends Item {
 
-    private Room room;
-
-    //
     public Treasure() {
-        super(new Vector2f(), new Circle(0, 0, 10));
+        super(new Vector2f(), new Rectangle(0, 0, 36, 36), true);
+        try {
+            graphic = new Image("res/images/items/treasure.png");
+        } catch (SlickException ex) {
+            Logger.getLogger(Treasure.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     public void render(GameContainer gc, Graphics g) {
-        g.setColor(Color.yellow);
-        this.body.setX(position.x);
-        this.body.setY(position.y);
-        g.fill(body);
-        g.setColor(Color.orange);
-        g.draw(body);
-    }
-
-    @Override
-    public void setPosition(Vector2f position) {
-        this.position = position;
-    }
-
-    @Override
-    public Vector2f getPosition() {
-        return this.position;
-    }
-
-    @Override
-    public float getWidth() {
-        return this.width;
-    }
-
-    @Override
-    public float getHeight() {
-        return this.height;
-    }
-
-    @Override
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
-    @Override
-    public Room getRoom() {
-        return this.room;
-    }
-
-    @Override
-    public void update(GameContainer container, int delta) {
-    }
-
-    @Override
-    public void setOrientation(int orientation) {
+        if (isVisible()) {
+            g.setColor(Color.red);
+            this.body.setX(position.x);
+            this.body.setY(position.y);
+            if (graphic != null) {
+                ((Image) graphic).draw(body.getX(), body.getY());
+            } else {
+                g.fill(body);
+            }
+        }
     }
 
 }

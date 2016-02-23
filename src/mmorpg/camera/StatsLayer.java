@@ -22,7 +22,7 @@ public class StatsLayer {
     public void render(GameContainer gc, Graphics g) {
         lifeBar.render(gc, g);
     }
-    
+
     public void decreaseLifeBar(float lifePoints) {
         lifeBar.decreaseLifeBar(lifePoints);
     }
@@ -46,6 +46,12 @@ public class StatsLayer {
                     g.fill(body);
                     g.setColor(Color.black);
                     ((Rectangle) this.body).setWidth(maxWidth);
+                    g.draw(body);
+                    g.setColor(Color.white);
+                    this.body.setX(position.x - 1);
+                    this.body.setY(position.y - 1);
+                    ((Rectangle) this.body).setWidth(maxWidth + 1);
+                    ((Rectangle) this.body).setHeight(10 + 1);
                     g.draw(body);
                 }
             };

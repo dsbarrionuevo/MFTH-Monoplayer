@@ -9,6 +9,10 @@ import mmorpg.camera.Camera;
 import mmorpg.camera.StatsLayer;
 import mmorpg.common.Placeable;
 import mmorpg.enemies.Enemy;
+import mmorpg.items.HealthPotion;
+import mmorpg.items.Item;
+import mmorpg.items.SpeedPotion;
+import mmorpg.items.Treasure;
 import mmorpg.map.room.Room;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -61,8 +65,11 @@ public class MMORPG extends BasicGame {
         for (int i = 0; i < enemies.size(); i++) {
             enemies.get(i).setTarget(player);
         }
-        currentRoom.focusObject(player);
+        SpeedPotion t = new SpeedPotion();
+        t.setCatcher(player);
+        currentRoom.addObject(t, 5, 4);
         //
+        currentRoom.focusObject(player);
         statsLayer = new StatsLayer();
     }
 
@@ -88,6 +95,13 @@ public class MMORPG extends BasicGame {
                         System.out.println("GAMEOVER");
                     }
                 }
+            }
+        }
+        ArrayList<Item> items = currentRoom.getItems();
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.get(i);
+            if(!item.isVisible()){
+                currentRoom.removeObject(item);
             }
         }
     }

@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mmorpg.common.AnimationHolder;
+import mmorpg.common.Drawable;
 import mmorpg.common.Movable;
 import mmorpg.common.Placeable;
 import mmorpg.util.Timer;
 import mmorpg.util.TimerListener;
 import mmorpg.enemies.Enemy;
+import mmorpg.items.Catchable;
+import mmorpg.items.Catcher;
+import mmorpg.items.HealthPotion;
+import mmorpg.items.SpeedPotion;
+import mmorpg.items.Treasure;
 import mmorpg.map.room.Room;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
@@ -24,23 +30,25 @@ import org.newdawn.slick.geom.Vector2f;
  *
  * @author Diego
  */
-public class Player extends Movable implements Placeable, TimerListener {
+public class Player extends Movable implements Placeable, TimerListener, Catcher {
 
     public static final int STATE_WALKING = 0;
     public static final int STATE_STILL = 1;
     public static final int STATE_ATTACKING = 2;
     private Room room;
-    private float life;
+    private float life, maxLife;
     private float attackForce;
     private int state;
-    private Timer timerAppearsSword, timerHealInjure, timerHitTheDoor;
+    private Timer timerAppearsSword, timerHealInjure, timerHitTheDoor, timerSpeedPotion;
     private AnimationHolder animation;
     private Sword sword;
+    private float originalSpeed;
 
     public Player() {
         super(10f, new Vector2f(), new Rectangle(0, 0, 32, 32));
         this.state = STATE_STILL;
-        this.life = 100;
+        this.maxLife = 100;
+        this.life = maxLife;//full
         this.attackForce = 10;
         this.timerHitTheDoor = new Timer(3, 1000, true);
         this.timerHitTheDoor.addListener(this);
@@ -49,6 +57,9 @@ public class Player extends Movable implements Placeable, TimerListener {
         this.timerHealInjure.addListener(this);
         this.timerAppearsSword = new Timer(1, 140);
         this.timerAppearsSword.addListener(this);
+        this.timerSpeedPotion = new Timer(4, 5000);
+        this.timerSpeedPotion.addListener(this);
+        this.originalSpeed = speed;
         sword = new Sword();
         sword.setVisible(true);
         animation = new AnimationHolder();
@@ -61,6 +72,7 @@ public class Player extends Movable implements Placeable, TimerListener {
         timerAppearsSword.update(delta);
         timerHealInjure.update(delta);
         timerHitTheDoor.update(delta);
+        timerSpeedPotion.update(delta);
 //        float swordMaxLength = 28;
 //        float swordMinLength = 12;
         if (timerAppearsSword.isRunning()) {
@@ -89,7 +101,6 @@ public class Player extends Movable implements Placeable, TimerListener {
             sword.setPosition(swordPostion);
             sword.setVisible(true);
         }
-
     }
 
     @Override
@@ -103,30 +114,6 @@ public class Player extends Movable implements Placeable, TimerListener {
             g.fill(body);
         }
         if (timerAppearsSword.isRunning()) {
-//            g.setColor(Color.blue);
-//            float swordWidth = 18;
-//            float swordHeight = 2;
-//            //horizontal por defecto
-//            Rectangle sword = new Rectangle(position.x + width / 2, position.y + height / 2, swordWidth, swordHeight);
-//            float awayFromPlayer = 10;
-//            if (animation.getCurrentAnimationName() == "left") {
-//                sword.setX(sword.getX() - swordWidth - awayFromPlayer);
-//                sword.setY(sword.getY() - swordHeight / 2);
-//            } else if (animation.getCurrentAnimationName() == "right") {
-//                sword.setX(sword.getX() + awayFromPlayer);
-//                sword.setY(sword.getY() - swordHeight / 2);
-//            } else if (animation.getCurrentAnimationName() == "back") {
-//                sword.setY(sword.getY() - swordWidth - awayFromPlayer);
-//                sword.setX(sword.getX() - swordHeight / 2);
-//                sword.setHeight(swordWidth);
-//                sword.setWidth(swordHeight);
-//            } else if (animation.getCurrentAnimationName() == "front") {
-//                sword.setY(sword.getY() + awayFromPlayer);
-//                sword.setX(sword.getX() - swordHeight / 2);
-//                sword.setHeight(swordWidth);
-//                sword.setWidth(swordHeight);
-//            }
-//            g.fill(sword);
             sword.render(gc, g);
         }
         if (this.timerHealInjure.isRunning()) {
@@ -146,7 +133,6 @@ public class Player extends Movable implements Placeable, TimerListener {
             }
         }
         this.timerAppearsSword.start();
-        //this.state = STATE_ATTACKING;
     }
 
     private void move(GameContainer container, int delta) {
@@ -316,6 +302,33 @@ public class Player extends Movable implements Placeable, TimerListener {
             case (3)://pass throught door
                 room.hitTheDoor(this);
                 break;
+            case (4)://speed potion
+                speed = originalSpeed;
+                break;
         }
+    }
+
+    @Override
+    public void catches(Catchable catchable) {
+        if (catchable instanceof Treasure) {
+            System.out.println("WIN!");
+        } else if (catchable instanceof HealthPotion) {
+            float healPower = 50;
+            if ((maxLife - life) > healPower) {
+                this.life += healPower;
+            } else {
+                this.life = maxLife;
+            }
+            //send notificacion to statsbar
+        } else if (catchable instanceof SpeedPotion) {
+            timerSpeedPotion.start();
+            float speedPower = originalSpeed * 2;//no es acumulativo
+            speed = speedPower;
+        }
+    }
+
+    @Override
+    public Drawable getDrawable() {
+        return this;
     }
 }
