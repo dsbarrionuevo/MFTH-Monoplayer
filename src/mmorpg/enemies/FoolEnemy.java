@@ -17,6 +17,7 @@ public class FoolEnemy extends Enemy {
 
     public FoolEnemy() {
         super(7f, new Vector2f(), new Rectangle(0, 0, 32, 32));
+        attackForce = 20;
     }
 
     @Override

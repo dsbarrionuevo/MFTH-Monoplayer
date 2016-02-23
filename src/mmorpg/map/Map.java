@@ -6,6 +6,7 @@ import mmorpg.map.buildingstrategies.ImprovedFileMapBuildingStrategy;
 import mmorpg.map.buildingstrategies.MapBuildingStrategy;
 import mmorpg.map.room.Room;
 import mmorpg.map.tiles.DoorTile;
+import mmorpg.player.PlayerEventListener;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -17,16 +18,21 @@ import org.newdawn.slick.SlickException;
 public class Map {
 
     private ArrayList<Room> rooms;
+    private ArrayList<MapEventListener> listeners;
     private Room currentRoom;
     private MapBuildingStrategy buildingStrategy;
 
     public Map(int roomsCount) {
+        this.listeners = new ArrayList<>();
         //this.buildingStrategy = new SingleRowMapBuildingStrategy(SingleRowMapBuildingStrategy.ORIENTATION_HORIZONTAL, roomsCount, 50, 50);
         //this.buildingStrategy = new FileMapBuildingStrategy("res/map1.txt", 50, 50);
         this.buildingStrategy = new ImprovedFileMapBuildingStrategy("res/maps/map1.txt", 50, 50);
+    }
+
+    public void build() {
         this.buildingStrategy.build(this);
         this.rooms = this.buildingStrategy.getRooms();
-        this.currentRoom = buildingStrategy.getFirstRoom();
+        this.changeRoom(buildingStrategy.getFirstRoom().getRoomId());
     }
 
     public void render(GameContainer container, Graphics g) throws SlickException {
@@ -60,11 +66,23 @@ public class Map {
         Room nextRoom = otherDoor.getMyRoom();
         currentRoom.removeObject(placeable);
         nextRoom.addObject(placeable, otherDoor.getTileX(), otherDoor.getTileY());
-        nextRoom.focusObject(placeable);
+        //nextRoom.focusObject(placeable);
         changeRoom(nextRoom.getRoomId());
     }
 
     public void changeRoom(int idNewRoom) {
+        System.out.println("...");
         this.currentRoom = buildingStrategy.getRoomById(idNewRoom);
+        for (int i = 0; i < listeners.size(); i++) {
+            listeners.get(i).roomChanged(currentRoom);
+        }
+    }
+
+    public boolean addListener(MapEventListener listener) {
+        return this.listeners.add(listener);
+    }
+
+    public boolean removeListener(MapEventListener listener) {
+        return this.listeners.remove(listener);
     }
 }

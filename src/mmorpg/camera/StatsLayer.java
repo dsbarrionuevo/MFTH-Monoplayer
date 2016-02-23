@@ -23,14 +23,19 @@ public class StatsLayer {
         lifeBar.render(gc, g);
     }
 
-    public void decreaseLifeBar(float lifePoints) {
-        lifeBar.decreaseLifeBar(lifePoints);
+    public void updateLifeBar(float lifePoints) {
+        lifeBar.updateLifeBar(lifePoints);
+    }
+
+    public void setMaxLife(float maxLife) {
+        this.lifeBar.maxLife = maxLife;
     }
 
     class LifeBar {
 
         private Drawable lifeBar;
         private float currentWidth, maxWidth;
+        protected float maxLife;
 
         public LifeBar() {
             maxWidth = 200;
@@ -57,18 +62,19 @@ public class StatsLayer {
             };
         }
 
-        public void decreaseLifeBar(float lifePoints) {
-            float decrease = (lifePoints * maxWidth) / 100;
-            if (currentWidth - decrease < 0) {
+        private void updateLifeBar(float lifePoints) {
+            if (lifePoints <= 0) {
                 currentWidth = 0;
             } else {
-                currentWidth -= decrease;
+                float lifeWidth = (lifePoints * maxWidth) / maxLife;
+                currentWidth = lifeWidth;
             }
         }
 
         public void render(GameContainer gc, Graphics g) {
             lifeBar.render(gc, g);
         }
+
     }
 
 }

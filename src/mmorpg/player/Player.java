@@ -43,6 +43,7 @@ public class Player extends Movable implements Placeable, TimerListener, Catcher
     private AnimationHolder animation;
     private Sword sword;
     private float originalSpeed;
+    private ArrayList<PlayerEventListener> listeners;
 
     public Player() {
         super(10f, new Vector2f(), new Rectangle(0, 0, 32, 32));
@@ -60,6 +61,7 @@ public class Player extends Movable implements Placeable, TimerListener, Catcher
         this.timerSpeedPotion = new Timer(4, 5000);
         this.timerSpeedPotion.addListener(this);
         this.originalSpeed = speed;
+        this.listeners = new ArrayList<>();
         sword = new Sword();
         sword.setVisible(true);
         animation = new AnimationHolder();
@@ -265,7 +267,16 @@ public class Player extends Movable implements Placeable, TimerListener, Catcher
         this.attackForce = attackForce;
     }
 
-    public void injure() {
+    public void injure(float enemyAttackForce) {
+        life -= enemyAttackForce;
+        for (int i = 0; i < listeners.size(); i++) {
+            listeners.get(i).lifeChanged(life);
+        }
+        if (life <= 0) {
+            for (int i = 0; i < listeners.size(); i++) {
+                listeners.get(i).playerDead();
+            }
+        }
         timerHealInjure.start();
     }
 
@@ -311,7 +322,9 @@ public class Player extends Movable implements Placeable, TimerListener, Catcher
     @Override
     public void catches(Catchable catchable) {
         if (catchable instanceof Treasure) {
-            System.out.println("WIN!");
+            for (int i = 0; i < listeners.size(); i++) {
+                listeners.get(i).treasureFound();
+            }
         } else if (catchable instanceof HealthPotion) {
             float healPower = 50;
             if ((maxLife - life) > healPower) {
@@ -319,7 +332,9 @@ public class Player extends Movable implements Placeable, TimerListener, Catcher
             } else {
                 this.life = maxLife;
             }
-            //send notificacion to statsbar
+            for (int i = 0; i < listeners.size(); i++) {
+                listeners.get(i).lifeChanged(life);
+            }
         } else if (catchable instanceof SpeedPotion) {
             timerSpeedPotion.start();
             float speedPower = originalSpeed * 2;//no es acumulativo
@@ -327,8 +342,20 @@ public class Player extends Movable implements Placeable, TimerListener, Catcher
         }
     }
 
+    public float getMaxLife() {
+        return maxLife;
+    }
+
     @Override
     public Drawable getDrawable() {
         return this;
+    }
+
+    public boolean addListener(PlayerEventListener listener) {
+        return this.listeners.add(listener);
+    }
+
+    public boolean removeListener(PlayerEventListener listener) {
+        return this.listeners.remove(listener);
     }
 }
