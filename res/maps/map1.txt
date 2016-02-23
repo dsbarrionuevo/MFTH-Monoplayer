@@ -31,6 +31,21 @@
 			"speed":8
 		}
 	],
+	"item_types":[
+		{
+			"id_item_type":0,
+			"name":"treasure",
+			"image":"treasure.png"
+		},{
+			"id_item_type":1,
+			"name":"health potion",
+			"image":"healthpotion.png"
+		},{
+			"id_item_type":2,
+			"name":"speed potion",
+			"image":"speedpotion.png"
+		}
+	],
 	"room_types":[
 		{
 			"id_room_type":1,
@@ -187,6 +202,21 @@
 					"position":{
 						"x":3,
 						"y":3
+					}
+				}
+			],
+			"items":[
+				{
+					"id_item_type":1,
+					"position":{
+						"x":5,
+						"y":5
+					}
+				},{
+					"id_item_type":2,
+					"position":{
+						"x":6,
+						"y":2
 					}
 				}
 			]

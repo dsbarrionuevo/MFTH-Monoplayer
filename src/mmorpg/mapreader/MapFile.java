@@ -10,6 +10,7 @@ public class MapFile {
     private int[][] map;
     private TileType[] tileTypes;
     private EnemyType[] enemyTypes;
+    private ItemType[] itemTypes;
     private RoomType[] roomTypes;
     private RoomFile[] rooms;
 
@@ -29,6 +30,15 @@ public class MapFile {
         for (int i = 0; i < enemyTypes.length; i++) {
             if (enemyTypes[i].getId() == id) {
                 return enemyTypes[i];
+            }
+        }
+        return null;
+    }
+
+    public ItemType findItemType(int id) {
+        for (int i = 0; i < itemTypes.length; i++) {
+            if (itemTypes[i].getId() == id) {
+                return itemTypes[i];
             }
         }
         return null;
@@ -78,6 +88,10 @@ public class MapFile {
 
     public void setEnemyTypes(EnemyType[] enemyTypes) {
         this.enemyTypes = enemyTypes;
+    }
+
+    public void setItemTypes(ItemType[] itemTypes) {
+        this.itemTypes = itemTypes;
     }
 
     public int getId() {

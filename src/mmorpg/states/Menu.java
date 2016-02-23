@@ -24,6 +24,7 @@ public class Menu extends BasicGameState {
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
         this.stateController = game;
+        stateController.enterState(StateController.STATE_GAME);//solo para pruebas
         image = new Image("res/images/scenes/welcome.jpg");
     }
 

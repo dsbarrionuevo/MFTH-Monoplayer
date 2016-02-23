@@ -49,6 +49,18 @@ public class MapReader {
                 );
             }
             map.setEnemyTypes(enemyTypes);
+            
+            JSONArray itemTypesJson = root.getJSONArray("item_types");
+            ItemType[] itemTypes = new ItemType[itemTypesJson.length()];
+            for (int i = 0; i < itemTypesJson.length(); i++) {
+                JSONObject currentItemTypeJson = itemTypesJson.getJSONObject(i);
+                itemTypes[i] = new ItemType(
+                        currentItemTypeJson.getInt("id_item_type"),
+                        currentItemTypeJson.getString("name"),
+                        currentItemTypeJson.getString("image")
+                );
+            }
+            map.setItemTypes(itemTypes);
 
             JSONArray roomTypesJson = root.getJSONArray("room_types");
             RoomType[] roomTypes = new RoomType[roomTypesJson.length()];
@@ -119,10 +131,25 @@ public class MapReader {
                         );
                     }
                 }
+                ItemRoomFile[] itemsRoomFile = new ItemRoomFile[0];
+                if (currentRoomFileJson.has("items")) {
+                    JSONArray itemsRoomFileJson = currentRoomFileJson.getJSONArray("items");
+                    itemsRoomFile = new ItemRoomFile[itemsRoomFileJson.length()];
+                    for (int j = 0; j < itemsRoomFileJson.length(); j++) {
+                        JSONObject currentItemFileJson = itemsRoomFileJson.getJSONObject(j);
+                        JSONObject positionFileJson = currentItemFileJson.getJSONObject("position");
+                        PositionFile positionFile = new PositionFile(positionFileJson.getInt("x"), positionFileJson.getInt("y"));
+                        itemsRoomFile[j] = new ItemRoomFile(
+                                map.findItemType(currentItemFileJson.getInt("id_item_type")),
+                                positionFile
+                        );
+                    }
+                }
                 rooms[i] = new RoomFile(
                         currentRoomFileJson.getInt("id_room"),
                         map.findRoomType(currentRoomFileJson.getInt("room_type")),
                         enemiesRoomFile,
+                        itemsRoomFile,
                         getMap(currentRoomFileJson, "map")
                 );
             }
