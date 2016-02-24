@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import mmorpg.common.Placeable;
 import mmorpg.map.buildingstrategies.ImprovedFileMapBuildingStrategy;
 import mmorpg.map.buildingstrategies.MapBuildingStrategy;
+import mmorpg.map.buildingstrategies.SingleRowMapBuildingStrategy;
 import mmorpg.map.room.Room;
 import mmorpg.map.tiles.DoorTile;
-import mmorpg.player.PlayerEventListener;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -24,9 +24,8 @@ public class Map {
 
     public Map(int roomsCount) {
         this.listeners = new ArrayList<>();
-        //this.buildingStrategy = new SingleRowMapBuildingStrategy(SingleRowMapBuildingStrategy.ORIENTATION_HORIZONTAL, roomsCount, 50, 50);
-        //this.buildingStrategy = new FileMapBuildingStrategy("res/map1.txt", 50, 50);
-        this.buildingStrategy = new ImprovedFileMapBuildingStrategy("res/maps/map1.txt", 50, 50);
+        this.buildingStrategy = new SingleRowMapBuildingStrategy(SingleRowMapBuildingStrategy.ORIENTATION_HORIZONTAL, roomsCount, 50, 50);
+        //this.buildingStrategy = new ImprovedFileMapBuildingStrategy("res/maps/map1.txt", 50, 50);
     }
 
     public void build() {
@@ -59,7 +58,6 @@ public class Map {
         Room nextRoom = otherDoor.getMyRoom();
         currentRoom.removeObject(placeable);
         nextRoom.addObject(placeable, otherDoor.getTileX(), otherDoor.getTileY());
-        //nextRoom.focusObject(placeable);
         changeRoom(nextRoom.getRoomId());
     }
 

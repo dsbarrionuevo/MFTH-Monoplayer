@@ -43,4 +43,12 @@ public abstract class RoomBuildingStrategy {
         }
     }
 
+    public float getTileWidth() {
+        return tileWidth;
+    }
+
+    public float getTileHeight() {
+        return tileHeight;
+    }
+
 }

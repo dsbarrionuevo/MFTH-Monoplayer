@@ -46,9 +46,9 @@ public class Room {
 
     public Room(int roomId, RoomBuildingStrategy buildingStrategy) {
         this.roomId = roomId;
-        this.tileWidth = 50;
-        this.tileHeight = 50;
         this.buildingStrategy = buildingStrategy;
+        this.tileWidth = buildingStrategy.getTileWidth();
+        this.tileHeight = buildingStrategy.getTileHeight();
         this.camera = Camera.getInstance();
         this.objects = new ArrayList<>();
         this.initPositions = new HashMap<>();

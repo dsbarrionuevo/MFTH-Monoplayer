@@ -47,7 +47,7 @@ public class Game extends BasicGameState implements PlayerEventListener, MapEven
         this.stateController = game;
         Camera.createCamera(new Vector2f(0f, 0f), container.getWidth(), container.getHeight());
         Camera.getInstance().setPadding(4);
-        map = new Map(1);
+        map = new Map(3);
         map.addListener(this);
         map.build();
         player = new Player();
@@ -62,7 +62,7 @@ public class Game extends BasicGameState implements PlayerEventListener, MapEven
         for (int i = 0; i < itemsInRoom.size(); i++) {
             itemsInRoom.get(i).setCatcher(player);
         }
-        currentRoom.focusObject(player);
+        //currentRoom.focusObject(player);
         statsLayer = new StatsLayer();
         statsLayer.setMaxLife(player.getMaxLife());
     }
@@ -103,14 +103,14 @@ public class Game extends BasicGameState implements PlayerEventListener, MapEven
     @Override
     public void playerDead() {
         currentRoom.removeObject(player);
-        ((End)stateController.getState(StateController.STATE_END)).setVictory(false);
+        ((End) stateController.getState(StateController.STATE_END)).setVictory(false);
         AudioController.getInstance().playSound("gameover");
         stateController.enterState(StateController.STATE_END);
     }
 
     @Override
     public void treasureFound() {
-        ((End)stateController.getState(StateController.STATE_END)).setVictory(true);
+        ((End) stateController.getState(StateController.STATE_END)).setVictory(true);
         AudioController.getInstance().playSound("victory");
         stateController.enterState(StateController.STATE_END);
     }
