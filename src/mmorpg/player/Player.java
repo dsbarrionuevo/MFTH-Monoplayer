@@ -16,6 +16,7 @@ import mmorpg.items.HealthPotion;
 import mmorpg.items.SpeedPotion;
 import mmorpg.items.Treasure;
 import mmorpg.map.room.Room;
+import mmorpg.util.AudioController;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -125,14 +126,21 @@ public class Player extends Movable implements Placeable, TimerListener, Catcher
     }
 
     public void attack(ArrayList<Placeable> objects) {
+        boolean hurtEnemy = false;
         for (int i = 0; i < objects.size(); i++) {
             Placeable object = objects.get(i);
             if (object instanceof Enemy) {
                 Enemy enemy = (Enemy) object;
                 if (sword.collide(enemy)) {
                     enemy.injure(getAttackForce(), getPosition());
+                    hurtEnemy = true;
                 }
             }
+        }
+        if (hurtEnemy) {
+            AudioController.getInstance().playSound("attack");
+        } else {
+            AudioController.getInstance().playSound("missattack");
         }
         this.timerAppearsSword.start();
     }
@@ -335,10 +343,12 @@ public class Player extends Movable implements Placeable, TimerListener, Catcher
             for (int i = 0; i < listeners.size(); i++) {
                 listeners.get(i).lifeChanged(life);
             }
+            AudioController.getInstance().playSound("healthpotion");
         } else if (catchable instanceof SpeedPotion) {
             timerSpeedPotion.start();
             float speedPower = originalSpeed * 2;//no es acumulativo
             speed = speedPower;
+            AudioController.getInstance().playSound("speedpotion");
         }
     }
 

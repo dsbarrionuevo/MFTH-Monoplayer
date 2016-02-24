@@ -4,6 +4,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -24,8 +25,9 @@ public class Menu extends BasicGameState {
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
         this.stateController = game;
-        stateController.enterState(StateController.STATE_GAME);//solo para pruebas
+        //stateController.enterState(StateController.STATE_GAME);//solo para pruebas
         image = new Image("res/images/scenes/welcome.jpg");
+        (new Sound("res/sounds/ambient.wav")).loop();
     }
 
     @Override

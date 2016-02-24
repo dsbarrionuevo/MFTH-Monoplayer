@@ -1,6 +1,8 @@
 package mmorpg.states;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mmorpg.camera.Camera;
 import mmorpg.camera.StatsLayer;
 import mmorpg.common.Placeable;
@@ -11,10 +13,12 @@ import mmorpg.map.MapEventListener;
 import mmorpg.map.room.Room;
 import mmorpg.player.Player;
 import mmorpg.player.PlayerEventListener;
+import mmorpg.util.AudioController;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -100,12 +104,14 @@ public class Game extends BasicGameState implements PlayerEventListener, MapEven
     public void playerDead() {
         currentRoom.removeObject(player);
         ((End)stateController.getState(StateController.STATE_END)).setVictory(false);
+        AudioController.getInstance().playSound("gameover");
         stateController.enterState(StateController.STATE_END);
     }
 
     @Override
     public void treasureFound() {
         ((End)stateController.getState(StateController.STATE_END)).setVictory(true);
+        AudioController.getInstance().playSound("victory");
         stateController.enterState(StateController.STATE_END);
     }
 
