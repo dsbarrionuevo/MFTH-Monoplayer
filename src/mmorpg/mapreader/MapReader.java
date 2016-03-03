@@ -38,6 +38,18 @@ public class MapReader {
             }
             map.setTileTypes(tileTypes);
 
+            JSONObject playerJson = root.getJSONObject("player");
+            JSONObject positionFileJson = playerJson.getJSONObject("position");
+            PositionFile positionFile = new PositionFile(positionFileJson.getInt("x"), positionFileJson.getInt("y"));
+            PlayerFile playerFile = new PlayerFile(
+                    playerJson.getDouble("life"),
+                    playerJson.getDouble("attack_force"),
+                    playerJson.getDouble("speed"),
+                    playerJson.getInt("id_room"),
+                    positionFile
+            );
+            map.setPlayerFile(playerFile);
+
             JSONArray enemyTypesJson = root.getJSONArray("enemy_types");
             EnemyType[] enemyTypes = new EnemyType[enemyTypesJson.length()];
             for (int i = 0; i < enemyTypesJson.length(); i++) {
@@ -51,7 +63,7 @@ public class MapReader {
                 );
             }
             map.setEnemyTypes(enemyTypes);
-            
+
             JSONArray itemTypesJson = root.getJSONArray("item_types");
             ItemType[] itemTypes = new ItemType[itemTypesJson.length()];
             for (int i = 0; i < itemTypesJson.length(); i++) {
@@ -125,8 +137,8 @@ public class MapReader {
                     enemiesRoomFile = new EnemyRoomFile[enemiesRoomFileJson.length()];
                     for (int j = 0; j < enemiesRoomFileJson.length(); j++) {
                         JSONObject currentEnemyFileJson = enemiesRoomFileJson.getJSONObject(j);
-                        JSONObject positionFileJson = currentEnemyFileJson.getJSONObject("position");
-                        PositionFile positionFile = new PositionFile(positionFileJson.getInt("x"), positionFileJson.getInt("y"));
+                        positionFileJson = currentEnemyFileJson.getJSONObject("position");
+                        positionFile = new PositionFile(positionFileJson.getInt("x"), positionFileJson.getInt("y"));
                         enemiesRoomFile[j] = new EnemyRoomFile(
                                 map.findRoomType(currentRoomFileJson.getInt("room_type")).findEnemyFile(currentEnemyFileJson.getInt("id_enemy")),
                                 positionFile
@@ -139,8 +151,8 @@ public class MapReader {
                     itemsRoomFile = new ItemRoomFile[itemsRoomFileJson.length()];
                     for (int j = 0; j < itemsRoomFileJson.length(); j++) {
                         JSONObject currentItemFileJson = itemsRoomFileJson.getJSONObject(j);
-                        JSONObject positionFileJson = currentItemFileJson.getJSONObject("position");
-                        PositionFile positionFile = new PositionFile(positionFileJson.getInt("x"), positionFileJson.getInt("y"));
+                        positionFileJson = currentItemFileJson.getJSONObject("position");
+                        positionFile = new PositionFile(positionFileJson.getInt("x"), positionFileJson.getInt("y"));
                         itemsRoomFile[j] = new ItemRoomFile(
                                 map.findItemType(currentItemFileJson.getInt("id_item_type")),
                                 positionFile

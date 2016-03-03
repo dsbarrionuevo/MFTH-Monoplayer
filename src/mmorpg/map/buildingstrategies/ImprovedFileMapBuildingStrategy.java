@@ -22,7 +22,9 @@ import mmorpg.mapreader.ItemRoomFile;
 import mmorpg.mapreader.ItemType;
 import mmorpg.mapreader.MapFile;
 import mmorpg.mapreader.MapReader;
+import mmorpg.mapreader.PlayerFile;
 import mmorpg.mapreader.RoomFile;
+import mmorpg.player.Player;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -120,9 +122,6 @@ public class ImprovedFileMapBuildingStrategy extends MapBuildingStrategy {
                 }
             }
         }
-        if (this.firstRoom == null) {
-            this.firstRoom = rooms.get(0);
-        }
         //connecting rooms
         //this only works if the rooms are neighboors and each one has only one door on his side
         for (int i = 0; i < mainMap.length; i++) {
@@ -176,6 +175,18 @@ public class ImprovedFileMapBuildingStrategy extends MapBuildingStrategy {
                 }
             }
         }
+        //now set player
+        Player player = new Player();
+        PlayerFile playerFile = mapFile.getPlayerFile();
+        player.setLife((float) playerFile.getLife());
+        player.setAttackForce((float) playerFile.getAttackForce());
+        player.setSpeed((float) playerFile.getSpeed());
+        //now first room is where the player begins
+        this.firstRoom = getRoomById(playerFile.getRoomId());
+        if (this.firstRoom == null) {
+            this.firstRoom = rooms.get(0);
+        }
+        getFirstRoom().addObject(player, playerFile.getPosition().getX(), playerFile.getPosition().getY());
     }
 
 }

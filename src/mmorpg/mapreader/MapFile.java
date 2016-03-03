@@ -13,6 +13,7 @@ public class MapFile {
     private ItemType[] itemTypes;
     private RoomType[] roomTypes;
     private RoomFile[] rooms;
+    private PlayerFile playerFile;
 
     public MapFile() {
     }
@@ -112,6 +113,14 @@ public class MapFile {
 
     public RoomFile[] getRooms() {
         return rooms;
+    }
+
+    public PlayerFile getPlayerFile() {
+        return playerFile;
+    }
+
+    public void setPlayerFile(PlayerFile playerFile) {
+        this.playerFile = playerFile;
     }
 
 }

@@ -55,10 +55,18 @@ public class Game extends BasicGameState implements PlayerEventListener, MapEven
         map = new Map(3);
         map.addListener(this);
         map.build();
-        player = new Player();
-        player.addListener(this);
         currentRoom = map.getCurrentRoom();
-        currentRoom.addObject(player, 1, 1);
+        //currentRoom.addObject(player, 1, 1);
+        ArrayList<Placeable> objects = currentRoom.getObjects();
+        for (int i = 0; i < objects.size(); i++) {
+            if (objects.get(i) instanceof Player) {
+                player = (Player) objects.get(i);
+            }
+        }
+        if (player == null) {
+            System.err.println("Player not set in any room");
+        }
+        player.addListener(this);
         enemiesInRoom = currentRoom.getEnemies();
         for (int i = 0; i < enemiesInRoom.size(); i++) {
             enemiesInRoom.get(i).setTarget(player);

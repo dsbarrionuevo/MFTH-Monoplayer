@@ -266,6 +266,7 @@ public class Player extends Movable implements Placeable, TimerListener, Catcher
     }
 
     public void setLife(float life) {
+        this.maxLife = life;
         this.life = life;
     }
 
