@@ -28,7 +28,9 @@
 		{
 			"id_enemy_type":0,
 			"name":"wall enemy",
-			"speed":8
+			"life":10,
+			"attack_force":2,
+			"speed":5
 		}
 	],
 	"item_types":[

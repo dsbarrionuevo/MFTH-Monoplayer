@@ -44,7 +44,7 @@ public class ImprovedFileMapBuildingStrategy extends MapBuildingStrategy {
     public void build(Map map) {
         this.rooms = new ArrayList<>();
         MapReader mapReader = new MapReader();
-        MapFile mapFile = mapReader.buildMapFormFile(pathFile);
+        MapFile mapFile = mapReader.buildMapFromFile(pathFile);
         //creating the rooms
         int[][] mainMap = mapFile.getMap();
         for (int i = 0; i < mainMap.length; i++) {
@@ -59,8 +59,10 @@ public class ImprovedFileMapBuildingStrategy extends MapBuildingStrategy {
                     for (int k = 0; k < enemiesRoomFile.length; k++) {
                         EnemyRoomFile enemyRoomFile = enemiesRoomFile[k];
                         Enemy enemy = new FoolEnemy();
+                        //tendria que filtrar el tipo de enemigo, por defectos son todos FoolEnemy
                         if (enemyRoomFile.getEnemy().getEnemyType().getId() == 0) {
-                            //tendria que filtrar el tipo de enemigo
+                            enemy.setLife((float) enemyRoomFile.getEnemy().getEnemyType().getLife());
+                            enemy.setAttackForce((float) enemyRoomFile.getEnemy().getEnemyType().getAttackForce());
                             enemy.setSpeed((float) enemyRoomFile.getEnemy().getEnemyType().getSpeed());
                             int duration = 340;
                             AnimationHolder animation = new AnimationHolder();

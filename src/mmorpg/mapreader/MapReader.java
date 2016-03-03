@@ -18,7 +18,7 @@ public class MapReader {
 
     }
 
-    public MapFile buildMapFormFile(String mapFileName) {
+    public MapFile buildMapFromFile(String mapFileName) {
         try {
             String mapFile = SystemIO.readFile(mapFileName);
             map = new MapFile();
@@ -45,6 +45,8 @@ public class MapReader {
                 enemyTypes[i] = new EnemyType(
                         currentEnemyTypeJson.getInt("id_enemy_type"),
                         currentEnemyTypeJson.getString("name"),
+                        currentEnemyTypeJson.getDouble("life"),
+                        currentEnemyTypeJson.getDouble("attack_force"),
                         currentEnemyTypeJson.getDouble("speed")
                 );
             }
@@ -171,9 +173,5 @@ public class MapReader {
             }
         }
         return mapCoors;
-    }
-
-    public static void main(String[] args) {
-        new MapReader().buildMapFormFile("res/map2.txt");
     }
 }

@@ -223,4 +223,19 @@ public abstract class Enemy extends Movable implements Placeable, TimerListener 
         }
     }
 
+    public void setAttackForce(float attackForce) {
+        this.attackForce = attackForce;
+    }
+
+    public void setLife(float life) {
+        this.life = life;
+    }
+
+    @Override
+    public void setSpeed(float speed) {
+        super.setSpeed(speed);
+        setupFollowingStrategy();
+        setupMovingStrategy();
+    }
+
 }
