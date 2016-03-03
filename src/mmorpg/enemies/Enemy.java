@@ -117,6 +117,8 @@ public abstract class Enemy extends Movable implements Placeable, TimerListener 
     @Override
     public void setPosition(Vector2f position) {
         this.position = position;
+        this.body.setX(position.x);
+        this.body.setY(position.y);
     }
 
     @Override

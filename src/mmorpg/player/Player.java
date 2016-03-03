@@ -47,7 +47,7 @@ public class Player extends Movable implements Placeable, TimerListener, Catcher
     private ArrayList<PlayerEventListener> listeners;
 
     public Player() {
-        super(10f, new Vector2f(), new Rectangle(0, 0, 32, 32));
+        super(10f, new Vector2f(-200, -200), new Rectangle(0, 0, 32, 32));
         this.state = STATE_STILL;
         this.maxLife = 100;
         this.life = maxLife;//full
@@ -247,6 +247,8 @@ public class Player extends Movable implements Placeable, TimerListener, Catcher
     @Override
     public void setPosition(Vector2f position) {
         this.position = position;
+        this.body.setX(position.x);
+        this.body.setY(position.y);
     }
 
     @Override

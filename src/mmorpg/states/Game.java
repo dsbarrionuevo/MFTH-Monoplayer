@@ -45,6 +45,11 @@ public class Game extends BasicGameState implements PlayerEventListener, MapEven
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
         this.stateController = game;
+    }
+
+    @Override
+    public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+        super.enter(container, game);
         Camera.createCamera(new Vector2f(0f, 0f), container.getWidth(), container.getHeight());
         Camera.getInstance().setPadding(4);
         map = new Map(3);
@@ -62,7 +67,7 @@ public class Game extends BasicGameState implements PlayerEventListener, MapEven
         for (int i = 0; i < itemsInRoom.size(); i++) {
             itemsInRoom.get(i).setCatcher(player);
         }
-        //currentRoom.focusObject(player);
+        currentRoom.focusObject(player);
         statsLayer = new StatsLayer();
         statsLayer.setMaxLife(player.getMaxLife());
     }
