@@ -41,10 +41,10 @@ public class FoolEnemy extends Enemy {
                 g.fill(body);
             }
             //render radius
-            g.setColor(Color.yellow);
-            g.draw(new Circle(getPosition().x + getWidth() / 2, getPosition().y + getHeight() / 2, radiusVision));
-            g.setColor(Color.red);
-            g.draw(new Circle(getPosition().x + getWidth() / 2, getPosition().y + getHeight() / 2, radiusLostContact));
+//            g.setColor(Color.yellow);
+//            g.draw(new Circle(getPosition().x + getWidth() / 2, getPosition().y + getHeight() / 2, radiusVision));
+//            g.setColor(Color.red);
+//            g.draw(new Circle(getPosition().x + getWidth() / 2, getPosition().y + getHeight() / 2, radiusLostContact));
         }
     }
 

@@ -112,16 +112,21 @@ public class Player extends Movable implements Placeable, TimerListener, Catcher
         this.body.setX(position.x);
         this.body.setY(position.y);
         if (graphic != null) {
-            ((Animation) graphic).draw(body.getX(), body.getY());
+            if (this.timerHealInjure.isRunning()) {
+                ((Animation) graphic).draw(body.getX(), body.getY(), new Color(1, 1, 1, 0.5f));
+
+            } else {
+                ((Animation) graphic).draw(body.getX(), body.getY());
+            }
         } else {
             g.fill(body);
+            if (this.timerHealInjure.isRunning()) {
+                g.setColor(Color.red);
+                g.fillRect(position.x + width / 2 - 10, position.y + height / 2 - 10, 20, 20);
+            }
         }
         if (timerAppearsSword.isRunning()) {
             sword.render(gc, g);
-        }
-        if (this.timerHealInjure.isRunning()) {
-            g.setColor(Color.red);
-            g.fillRect(position.x + width / 2 - 10, position.y + height / 2 - 10, 20, 20);
         }
     }
 
@@ -225,8 +230,10 @@ public class Player extends Movable implements Placeable, TimerListener, Catcher
             }, duration, true));
             animation.setup(animationNames, animations, new int[]{0, 0, 0, 0});
             setOrientation(Room.DIRECTION_SOUTH);
+
         } catch (SlickException ex) {
-            Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Player.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 

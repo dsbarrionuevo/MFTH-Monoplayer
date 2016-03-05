@@ -62,7 +62,7 @@ public class ImprovedFileMapBuildingStrategy extends MapBuildingStrategy {
                         EnemyRoomFile enemyRoomFile = enemiesRoomFile[k];
                         Enemy enemy = new FoolEnemy();
                         //tendria que filtrar el tipo de enemigo, por defectos son todos FoolEnemy
-                        if (enemyRoomFile.getEnemy().getEnemyType().getId() == 0) {
+                        //if (enemyRoomFile.getEnemy().getEnemyType().getId() == 0) {
                             enemy.setLife((float) enemyRoomFile.getEnemy().getEnemyType().getLife());
                             enemy.setAttackForce((float) enemyRoomFile.getEnemy().getEnemyType().getAttackForce());
                             enemy.setSpeed((float) enemyRoomFile.getEnemy().getEnemyType().getSpeed());
@@ -90,7 +90,7 @@ public class ImprovedFileMapBuildingStrategy extends MapBuildingStrategy {
                             animation.setup(animationNames, animations, new int[]{0, 0, 0, 0});
                             enemy.setAnimation(animation);
                             enemy.setGraphic(enemy.getAnimation().changeAnimation(animationNames.get(0)));//otherwise, write "front" here
-                        }
+                        //}
                         newRoom.addObject(enemy, enemyRoomFile.getPosition().getX(), enemyRoomFile.getPosition().getY());
                     }
                     ItemRoomFile[] items = roomFile.getItems();

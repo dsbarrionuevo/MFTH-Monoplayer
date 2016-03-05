@@ -51,7 +51,7 @@ public abstract class Tile extends Drawable {
         } else {
             g.drawImage(image, position.x, position.y);
         }
-        g.setColor(Color.gray);
+        g.setColor(Color.black);
         g.draw(body);
     }
 

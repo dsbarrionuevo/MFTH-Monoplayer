@@ -1,0 +1,537 @@
+{
+    "id_map": 0,
+    "map":
+            [
+                [0, 2, 0, 0, 0, 0],
+                [3, 1, 6, 5, 0, 0],
+                [0, 4, 0, 7, 0, 0],
+                [0, 0, 0, 8, 9, 0]
+            ],
+    "player": {
+        "life": 100,
+        "attack_force": 4,
+        "speed": 10,
+        "id_room": 1,
+        "position": {
+            "x": 4,
+            "y": 4
+        }
+    }
+    ,
+    "tile_types": [
+        {
+            "id_tile_type": 0,
+            "name": "empty",
+            "walkable": "true",
+            "door": "false"
+        }, {
+            "id_tile_type": 1,
+            "name": "wall",
+            "walkable": "false",
+            "door": "false"
+        }, {
+            "id_tile_type": 2,
+            "name": "door",
+            "walkable": "true",
+            "door": "true"
+        }
+    ],
+    "enemy_types": [
+        {
+            "id_enemy_type": 0,
+            "name": "normal enemy",
+            "life": 20,
+            "attack_force": 4,
+            "speed": 6
+        }, {
+            "id_enemy_type": 1,
+            "name": "stronger enemy",
+            "life": 50,
+            "attack_force": 10,
+            "speed": 4
+        }, {
+            "id_enemy_type": 2,
+            "name": "fast enemy",
+            "life": 10,
+            "attack_force": 2,
+            "speed": 9
+        }
+    ],
+    "item_types": [
+        {
+            "id_item_type": 0,
+            "name": "treasure",
+            "image": "treasure.png"
+        }, {
+            "id_item_type": 1,
+            "name": "health potion",
+            "image": "healthpotion.png"
+        }, {
+            "id_item_type": 2,
+            "name": "speed potion",
+            "image": "speedpotion.png"
+        }
+    ],
+    "room_types": [
+        {
+            "id_room_type": 1,
+            "name": "forest",
+            "tiles": [
+                {
+                    "id_tile": 0,
+                    "tile_type": 0,
+                    "image": "grass.png"
+                },
+                {
+                    "id_tile": 1,
+                    "tile_type": 1,
+                    "image": "dirt.png"
+                },
+                {
+                    "id_tile": 2,
+                    "tile_type": 2,
+                    "image": "grass.png"
+                },
+                {
+                    "id_tile": 3,
+                    "tile_type": 1,
+                    "image": "water.png"
+                }
+            ],
+            "enemies": [
+                {
+                    "id_enemy": 0,
+                    "name": "green dragon",
+                    "enemy_type": 0,
+                    "animations": [
+                        {
+                            "side": "front",
+                            "animation": {
+                                "path": "res/images/monsters/monster0",
+                                "sprites": ["front_0.png", "front_1.png", "front_2.png"],
+                                "still": "front_1.png"
+                            }
+                        },
+                        {
+                            "side": "left",
+                            "animation": {
+                                "path": "res/images/monsters/monster0",
+                                "sprites": ["left_0.png", "left_1.png", "left_2.png"],
+                                "still": "left_1.png"
+                            }
+                        },
+                        {
+                            "side": "right",
+                            "animation": {
+                                "path": "res/images/monsters/monster0",
+                                "sprites": ["right_0.png", "right_1.png", "right_2.png"],
+                                "still": "right_1.png"
+                            }
+                        },
+                        {
+                            "side": "back",
+                            "animation": {
+                                "path": "res/images/monsters/monster0",
+                                "sprites": ["back_0.png", "back_1.png", "back_2.png"],
+                                "still": "back_1.png"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id_enemy": 1,
+                    "name": "yellow dragon",
+                    "enemy_type": 2,
+                    "animations": [
+                        {
+                            "side": "front",
+                            "animation": {
+                                "path": "res/images/monsters/monster2",
+                                "sprites": ["front_0.png", "front_1.png", "front_2.png"],
+                                "still": "front_1.png"
+                            }
+                        },
+                        {
+                            "side": "left",
+                            "animation": {
+                                "path": "res/images/monsters/monster2",
+                                "sprites": ["left_0.png", "left_1.png", "left_2.png"],
+                                "still": "left_1.png"
+                            }
+                        },
+                        {
+                            "side": "right",
+                            "animation": {
+                                "path": "res/images/monsters/monster2",
+                                "sprites": ["right_0.png", "right_1.png", "right_2.png"],
+                                "still": "right_1.png"
+                            }
+                        },
+                        {
+                            "side": "back",
+                            "animation": {
+                                "path": "res/images/monsters/monster2",
+                                "sprites": ["back_0.png", "back_1.png", "back_2.png"],
+                                "still": "back_1.png"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }, {
+            "id_room_type": 2,
+            "name": "castle",
+            "tiles": [
+                {
+                    "id_tile": 0,
+                    "tile_type": 0,
+                    "image": "castle_floor.png"
+                },
+                {
+                    "id_tile": 1,
+                    "tile_type": 1,
+                    "image": "castle_wall.png"
+                },
+                {
+                    "id_tile": 2,
+                    "tile_type": 2,
+                    "image": "castle_door.png"
+                }
+            ],
+            "enemies": [
+                {
+                    "id_enemy": 0,
+                    "name": "gray dragon",
+                    "enemy_type": 0,
+                    "animations": [
+                        {
+                            "side": "front",
+                            "animation": {
+                                "path": "res/images/monsters/monster5",
+                                "sprites": ["front_0.png", "front_1.png", "front_2.png"],
+                                "still": "front_1.png"
+                            }
+                        },
+                        {
+                            "side": "left",
+                            "animation": {
+                                "path": "res/images/monsters/monster5",
+                                "sprites": ["left_0.png", "left_1.png", "left_2.png"],
+                                "still": "left_1.png"
+                            }
+                        },
+                        {
+                            "side": "right",
+                            "animation": {
+                                "path": "res/images/monsters/monster5",
+                                "sprites": ["right_0.png", "right_1.png", "right_2.png"],
+                                "still": "right_1.png"
+                            }
+                        },
+                        {
+                            "side": "back",
+                            "animation": {
+                                "path": "res/images/monsters/monster5",
+                                "sprites": ["back_0.png", "back_1.png", "back_2.png"],
+                                "still": "back_1.png"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id_enemy": 1,
+                    "name": "red dragon",
+                    "enemy_type": 1,
+                    "animations": [
+                        {
+                            "side": "front",
+                            "animation": {
+                                "path": "res/images/monsters/monster3",
+                                "sprites": ["front_0.png", "front_1.png", "front_2.png"],
+                                "still": "front_1.png"
+                            }
+                        },
+                        {
+                            "side": "left",
+                            "animation": {
+                                "path": "res/images/monsters/monster3",
+                                "sprites": ["left_0.png", "left_1.png", "left_2.png"],
+                                "still": "left_1.png"
+                            }
+                        },
+                        {
+                            "side": "right",
+                            "animation": {
+                                "path": "res/images/monsters/monster3",
+                                "sprites": ["right_0.png", "right_1.png", "right_2.png"],
+                                "still": "right_1.png"
+                            }
+                        },
+                        {
+                            "side": "back",
+                            "animation": {
+                                "path": "res/images/monsters/monster3",
+                                "sprites": ["back_0.png", "back_1.png", "back_2.png"],
+                                "still": "back_1.png"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "rooms": [
+        {
+            "id_room": 1,
+            "room_type": 1,
+            "map": [
+                [1, 1, 1, 1, 1, 2, 1, 1, 1, 1],
+                [1, 1, 1, 0, 0, 0, 1, 0, 0, 1],
+                [1, 1, 0, 0, 0, 0, 1, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+                [1, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [2, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1, 2, 1, 1, 1]
+            ]
+        },
+        {
+            "id_room": 2,
+            "room_type": 1,
+            "map": [
+                [1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 1, 1, 0, 0, 1],
+                [1, 0, 0, 0, 1, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 2, 1, 1]
+            ],
+            "enemies": [
+                {
+                    "id_enemy": 0,
+                    "position": {
+                        "x": 2,
+                        "y": 2
+                    }
+                }
+            ]
+        },
+        {
+            "id_room": 3,
+            "room_type": 1,
+            "map": [
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 3, 3, 3, 3, 3, 0, 0, 1, 1, 0, 1],
+                [1, 3, 3, 3, 3, 0, 0, 0, 1, 0, 0, 1],
+                [1, 3, 3, 3, 3, 0, 0, 0, 1, 0, 0, 2],
+                [1, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            ],
+            "enemies": [
+                {
+                    "id_enemy": 0,
+                    "position": {
+                        "x": 6,
+                        "y": 4
+                    }
+                }
+            ]
+        }, {
+            "id_room": 4,
+            "room_type": 1,
+            "map": [
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 2],
+                [1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1],
+                [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            ],
+            "enemies": [
+                {
+                    "id_enemy": 1,
+                    "position": {
+                        "x": 6,
+                        "y": 5
+                    }
+                }
+            ],
+            "items": [
+                {
+                    "id_item_type": 1,
+                    "position": {
+                        "x": 7,
+                        "y": 5
+                    }
+                }
+            ]
+        }, {
+            "id_room": 6,
+            "room_type": 1,
+            "map": [
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 1],
+                [1, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 1],
+                [1, 0, 0, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0, 2],
+                [1, 0, 0, 0, 3, 3, 3, 3, 3, 3, 1, 0, 0, 1],
+                [2, 0, 0, 0, 0, 1, 1, 3, 3, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            ],
+            "enemies": [
+                {
+                    "id_enemy": 0,
+                    "position": {
+                        "x": 2,
+                        "y": 2
+                    }
+                }
+            ]
+        }, {
+            "id_room": 5,
+            "room_type": 1,
+            "map": [
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 1],
+                [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 3, 1],
+                [1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+                [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1]
+            ],
+            "enemies": [
+                {
+                    "id_enemy": 1,
+                    "position": {
+                        "x": 1,
+                        "y": 1
+                    }
+                }
+            ],
+            "items": [
+                {
+                    "id_item_type": 2,
+                    "position": {
+                        "x": 5,
+                        "y": 4
+                    }
+                }
+            ]
+        }, {
+            "id_room": 7,
+            "room_type": 2,
+            "map": [
+                [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1]
+            ],
+            "enemies": [
+                {
+                    "id_enemy": 0,
+                    "position": {
+                        "x": 4,
+                        "y": 5
+                    }
+                }, {
+                    "id_enemy": 0,
+                    "position": {
+                        "x": 4,
+                        "y": 7
+                    }
+                }, {
+                    "id_enemy": 0,
+                    "position": {
+                        "x": 7,
+                        "y": 7
+                    }
+                }
+            ]
+        }, {
+            "id_room": 8,
+            "room_type": 2,
+            "map": [
+                [1, 1, 1, 2, 1, 1, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 1, 1, 0, 0, 1],
+                [1, 0, 0, 1, 1, 0, 0, 1],
+                [1, 0, 0, 1, 1, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 2],
+                [1, 1, 1, 1, 1, 1, 1, 1]
+            ],
+            "enemies": [
+                {
+                    "id_enemy": 0,
+                    "position": {
+                        "x": 1,
+                        "y": 5
+                    }
+                }
+            ],
+            "items": [
+                {
+                    "id_item_type": 1,
+                    "position": {
+                        "x": 4,
+                        "y": 7
+                    }
+                }
+            ]
+        }, {
+            "id_room": 9,
+            "room_type": 2,
+            "map": [
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            ],
+            "enemies": [
+                {
+                    "id_enemy": 1,
+                    "position": {
+                        "x": 5,
+                        "y": 3
+                    }
+                }
+            ],
+            "items": [
+                {
+                    "id_item_type": 0,
+                    "position": {
+                        "x": 17,
+                        "y": 3
+                    }
+                }
+            ]
+        }
+    ]
+}
